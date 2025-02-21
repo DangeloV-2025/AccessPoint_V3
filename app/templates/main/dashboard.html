@@ -2,78 +2,169 @@
 
 {% block title %}My Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+    .resource-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: 1px solid #eee;
+    }
+
+    .resource-card h5 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .progress {
+        height: 25px;
+        border-radius: 12px;
+        margin: 15px 0;
+    }
+
+    .progress-bar {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .tasks-list {
+        margin-top: 20px;
+    }
+
+    .task-item {
+        padding: 12px 15px;
+        margin: 8px 0;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    /* Task Status Colors */
+    .task-not-started {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+    }
+
+    .task-in-progress {
+        background-color: #caf0f8;
+        border: 1px solid #90e0ef;
+    }
+
+    .task-submitted {
+        background-color: #00b4d8;
+        border: 1px solid #0096c7;
+        color: white;
+    }
+
+    .task-completed {
+        background-color: #0077b6;
+        border: 1px solid #023e8a;
+        color: white;
+    }
+
+    .form-check-input:checked {
+        background-color: #0077b6;
+        border-color: #0077b6;
+    }
+
+    .deadline-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+
+    .deadline-upcoming {
+        background-color: #ffd60a;
+        color: #000;
+    }
+
+    .deadline-passed {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
+<div class="container py-4">
     <h1 class="mb-4">My Dashboard</h1>
 
     <div class="row">
         <!-- Starred Resources -->
         <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header">
+            <div class="card">
+                <div class="card-header bg-white">
                     <h5 class="card-title mb-0">My Resources</h5>
                 </div>
                 <div class="card-body">
                     {% if applications %}
                         {% for application in applications %}
-                            <div class="resource-card mb-3">
-                                <h5>
-                                    <a href="{{ url_for('resources.show', id=application.resource.id) }}">
-                                        {{ application.resource.name }}
-                                    </a>
-                                    <small class="text-muted">
-                                        ({{ application.resource.resource_type|title }})
-                                    </small>
-                                </h5>
+                            <div class="resource-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5>
+                                        <a href="{{ url_for('resources.show', id=application.resource.id) }}" 
+                                           class="text-decoration-none text-dark">
+                                            {{ application.resource.name }}
+                                        </a>
+                                        <span class="badge bg-primary">{{ application.resource.resource_type|title }}</span>
+                                    </h5>
+                                </div>
                                 
                                 <!-- Progress Bar -->
                                 {% set completed = application.todos|selectattr('status', 'equalto', 'completed')|list|length %}
                                 {% set total = application.todos|length %}
                                 {% set progress = (completed / total * 100)|round|int if total > 0 else 0 %}
                                 
-                                <div class="progress mb-2" style="height: 20px;">
+                                <div class="progress">
                                     <div class="progress-bar {% if progress == 100 %}bg-success{% endif %}" 
                                          role="progressbar" 
                                          style="width: {{ progress }}%"
                                          aria-valuenow="{{ progress }}" 
                                          aria-valuemin="0" 
                                          aria-valuemax="100">
-                                        {{ progress }}%
+                                        {{ progress }}% Complete
                                     </div>
                                 </div>
 
                                 <!-- Tasks -->
                                 <div class="tasks-list">
                                     {% for todo in application.todos %}
-                                        <div class="form-check">
-                                            <input class="form-check-input" 
-                                                   type="checkbox" 
-                                                   {% if todo.status == 'completed' %}checked{% endif %}
-                                                   onchange="updateTodoStatus(this, '{{ todo.id }}')"
-                                                   id="todo-{{ todo.id }}">
-                                            <label class="form-check-label {% if todo.status == 'completed' %}text-muted{% endif %}" 
-                                                   for="todo-{{ todo.id }}">
-                                                {{ todo.task.name }}
-                                            </label>
+                                        <div class="task-item task-{{ todo.status|replace('_', '-') }}">
+                                            <div class="form-check">
+                                                <input class="form-check-input" 
+                                                       type="checkbox" 
+                                                       {% if todo.status == 'completed' %}checked{% endif %}
+                                                       onchange="updateTodoStatus(this, '{{ todo.id }}')"
+                                                       id="todo-{{ todo.id }}">
+                                                <label class="form-check-label" for="todo-{{ todo.id }}">
+                                                    {{ todo.task.name }}
+                                                </label>
+                                            </div>
                                         </div>
                                     {% endfor %}
                                 </div>
 
                                 <!-- Deadline -->
                                 {% if application.resource.deadline %}
-                                    <div class="mt-2">
-                                        <small class="text-{% if application.resource.deadline < now %}danger{% else %}muted{% endif %}">
-                                            Deadline: {{ application.resource.deadline.strftime('%Y-%m-%d') }}
-                                        </small>
+                                    <div class="deadline-badge 
+                                        {% if application.resource.deadline < now %}deadline-passed
+                                        {% else %}deadline-upcoming{% endif %}">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Deadline: {{ application.resource.deadline.strftime('%B %d, %Y') }}
                                     </div>
                                 {% endif %}
                             </div>
-                            {% if not loop.last %}<hr>{% endif %}
                         {% endfor %}
                     {% else %}
-                        <p>You haven't starred any resources yet. 
-                           <a href="{{ url_for('resources.index') }}">Browse resources</a>
-                        </p>
+                        <div class="text-center py-4">
+                            <p class="text-muted">You haven't starred any resources yet.</p>
+                            <a href="{{ url_for('resources.index') }}" class="btn btn-primary">
+                                Browse Resources
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>
