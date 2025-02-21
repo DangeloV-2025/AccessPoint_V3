@@ -1,0 +1,20 @@
+<!-- app/templates/admin/dashboard.html -->
+
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Admin Dashboard</h1>
+    
+    <!-- Insert any admin-only actions, stats, or lists here. -->
+    <p>Welcome to the Admin Dashboard! You can manage resources, view logs, etc.</p>
+
+    <!-- Examples of possible admin tasks or links -->
+    <ul>
+        <li><a href="{{ url_for('resources.import') }}">Import Resources</a></li>
+        <li><a href="{{ url_for('resources.index') }}">Manage Resources</a></li>
+        <!-- ... -->
+    </ul>
+</div>
+{% endblock %}

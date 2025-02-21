@@ -1,0 +1,55 @@
+<!-- app/templates/blog/new.html -->
+{% extends "base.html" %}
+{% block title %}Create New Blog Post{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Create New Blog Post</h1>
+    
+    <form method="POST">
+        <!-- Title Field -->
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="title" 
+                name="title" 
+                required
+            >
+        </div>
+        
+        <!-- Content Field -->
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea 
+                class="form-control" 
+                id="content" 
+                name="content" 
+                rows="8" 
+                required
+            ></textarea>
+        </div>
+        
+        <!-- Actions -->
+        <div class="mb-3">
+            <!-- If the user clicks this button, 'publish' will appear in request.form -->
+            <button 
+                type="submit" 
+                class="btn btn-primary" 
+                name="publish"
+                value="1"
+            >
+                Publish
+            </button>
+            <!-- This button will NOT contain 'publish' in request.form, so it saves as a draft -->
+            <button 
+                type="submit" 
+                class="btn btn-secondary"
+            >
+                Save as Draft
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

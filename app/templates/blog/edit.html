@@ -1,0 +1,58 @@
+<!-- app/templates/blog/edit.html -->
+{% extends "base.html" %}
+{% block title %}
+    Edit Blog Post
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Edit Blog Post</h1>
+    
+    <form method="POST">
+        <!-- Title Field -->
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="title" 
+                name="title" 
+                value="{{ post.title }}"
+                required
+            >
+        </div>
+        
+        <!-- Content Field -->
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea 
+                class="form-control" 
+                id="content" 
+                name="content" 
+                rows="8" 
+                required
+            >{{ post.content }}</textarea>
+        </div>
+        
+        <!-- Actions -->
+        <div class="mb-3">
+            <!-- If you click 'Update & Publish', 'publish' will be in request.form -->
+            <button 
+                type="submit" 
+                class="btn btn-primary" 
+                name="publish"
+                value="1"
+            >
+                Update &amp; Publish
+            </button>
+            <!-- Otherwise, this saves any changes but keeps status as draft (if not published yet). -->
+            <button 
+                type="submit" 
+                class="btn btn-secondary"
+            >
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

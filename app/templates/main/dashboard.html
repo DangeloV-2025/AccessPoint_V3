@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Dashboard</h1>
+
+    <div class="row">
+        <!-- Starred Resources -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">My Resources</h5>
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                        {% for application in applications %}
+                            <div class="resource-card mb-3">
+                                <h5>
+                                    <a href="{{ url_for('resources.show', id=application.resource.id) }}">
+                                        {{ application.resource.name }}
+                                    </a>
+                                    <small class="text-muted">
+                                        ({{ application.resource.resource_type|title }})
+                                    </small>
+                                </h5>
+                                
+                                <!-- Progress Bar -->
+                                {% set completed = application.todos|selectattr('status', 'equalto', 'completed')|list|length %}
+                                {% set total = application.todos|length %}
+                                {% set progress = (completed / total * 100)|round|int if total > 0 else 0 %}
+                                
+                                <div class="progress mb-2" style="height: 20px;">
+                                    <div class="progress-bar {% if progress == 100 %}bg-success{% endif %}" 
+                                         role="progressbar" 
+                                         style="width: {{ progress }}%"
+                                         aria-valuenow="{{ progress }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ progress }}%
+                                    </div>
+                                </div>
+
+                                <!-- Tasks -->
+                                <div class="tasks-list">
+                                    {% for todo in application.todos %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   {% if todo.status == 'completed' %}checked{% endif %}
+                                                   onchange="updateTodoStatus(this, '{{ todo.id }}')"
+                                                   id="todo-{{ todo.id }}">
+                                            <label class="form-check-label {% if todo.status == 'completed' %}text-muted{% endif %}" 
+                                                   for="todo-{{ todo.id }}">
+                                                {{ todo.task.name }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Deadline -->
+                                {% if application.resource.deadline %}
+                                    <div class="mt-2">
+                                        <small class="text-{% if application.resource.deadline < now %}danger{% else %}muted{% endif %}">
+                                            Deadline: {{ application.resource.deadline.strftime('%Y-%m-%d') }}
+                                        </small>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if not loop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p>You haven't starred any resources yet. 
+                           <a href="{{ url_for('resources.index') }}">Browse resources</a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Upcoming Deadlines -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Upcoming Deadlines</h5>
+                </div>
+                <div class="card-body">
+                    {% set upcoming = applications|selectattr('resource.deadline')|list %}
+                    {% if upcoming %}
+                        <ul class="list-unstyled">
+                            {% for app in upcoming|sort(attribute='resource.deadline') %}
+                                <li class="mb-2">
+                                    <strong>{{ app.resource.deadline.strftime('%Y-%m-%d') }}</strong>
+                                    <br>
+                                    {{ app.resource.name }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No upcoming deadlines</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">My Progress</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Resources Starred: {{ applications|length }}</li>
+                        {% set completed_tasks = 0 %}
+                        {% for app in applications %}
+                            {% for todo in app.todos %}
+                                {% if todo.status == 'completed' %}
+                                    {% set completed_tasks = completed_tasks + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        <li>Tasks Completed: {{ completed_tasks }}</li>
+                        <li>Applications Submitted: {{ applications|selectattr('status', 'equalto', 'submitted')|list|length }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for updating todo status -->
+<script>
+function updateTodoStatus(checkbox, todoId) {
+    fetch(`/todos/${todoId}/toggle`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const label = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                label.classList.add('text-muted');
+            } else {
+                label.classList.remove('text-muted');
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %} 

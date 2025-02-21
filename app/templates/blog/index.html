@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Blog Posts{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <h1 class="mb-4">Blog Posts</h1>
+            
+            {% if current_user.is_blogger() %}
+            <div class="mb-4">
+                <a href="{{ url_for('blog.new') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Post
+                </a>
+            </div>
+            {% endif %}
+            
+            {% if posts %}
+                {% for post in posts %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title h4">
+                            <a href="{{ url_for('blog.show', id=post.id) }}" class="text-decoration-none">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                        {% if post.category %}
+                            <span class="badge bg-secondary">{{ post.category.name }}</span>
+                        {% endif %}
+                        <p class="card-text text-muted small">
+                            By {{ post.author.username }} on {{ post.published_at.strftime('%B %d, %Y') }}
+                        </p>
+                        <p class="card-text">{{ post.content[:200] }}...</p>
+                        <a href="{{ url_for('blog.show', id=post.id) }}" class="btn btn-sm btn-outline-primary">
+                            Read More
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No posts found.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Categories</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for category in categories %}
+                        <li class="mb-2">
+                            <a href="{{ url_for('blog.category', slug=category.slug) }}" class="text-decoration-none">
+                                {{ category.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

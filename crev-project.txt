@@ -1,0 +1,2315 @@
+Project Directory Structure:
+├── Fly-Ins Sheet - All Fly-Ins.csv
+├── Pre-College Programs - Precollege-Programs for CSV (1).csv
+├── Scholarships Sheet - CSV.csv
+├── app
+│   ├── __init__.py
+│   ├── config.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── application.py
+│   │   ├── blog.py
+│   │   ├── blog_category.py
+│   │   ├── blog_post.py
+│   │   ├── resource.py
+│   │   ├── tag.py
+│   │   ├── task.py
+│   │   ├── todo.py
+│   │   └── user.py
+│   ├── routes
+│   │   ├── admin.py
+│   │   ├── applications.py
+│   │   ├── auth.py
+│   │   ├── blog.py
+│   │   ├── main.py
+│   │   └── resources.py
+│   ├── templates
+│   │   ├── auth
+│   │   │   ├── login.html
+│   │   │   └── register.html
+│   │   ├── base.html
+│   │   ├── blog
+│   │   │   └── index.html
+│   │   ├── includes
+│   │   │   └── navbar.html
+│   │   ├── main
+│   │   │   ├── dashboard.html
+│   │   │   └── index.html
+│   │   ├── resources
+│   │   │   ├── import.html
+│   │   │   ├── index.html
+│   │   │   └── show.html
+├── migrations
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+├── project_requrment.md
+├── requirements.txt
+└── run.py
+
+
+File: 
+Fly-Ins Sheet - All Fly-Ins.csv
+Content: 
+host_institution,program_name,in_person,email,priority_deadline,regular_deadline,apply_link,target_applicants,session_1,session_2,session_3,num_essays,num_LORs,other_notes,hosting_situation,program_status
+Amherst College,A2A,,admission@amherst.edu,,"August 12, 2024",https://www.amherst.edu/admission/diversity/a2a,"FGLI, minorities",9/28-9/30,,,1,0,Recommended to submit an academic writing sample,,TRUE
+Amherst College,EONS,,admission@amherst.edu,,"August 14, 2024",https://www.amherst.edu/admission/diversity/EONS,Indigenous students,9/27,,,1,0,Recommended to submit an academic writing sample,,TRUE
+Babson College,Access Babson,,ugradadmission@babson.edu,,"August 4, 2024",https://www.babson.edu/undergraduate/admission/visit-and-engage/access-babson/,"FGLI, minorities",10/06 - 10/07,,,2,0,,,TRUE
+Barnard College,Barnard Bound,,admissions@barnard.edu,,"September 18, 2023",https://barnard.edu/admissions/commitment-to-access,"FGLI, minorities, women(!)",9/1-10/31,,,1,0,"Virutal, for Females",,TRUE
+Bates College,Prologue to Bates,,admission@bates.edu,,"April 1, 2025",https://www.bates.edu/admission/prologue/,"FGLI, minorities",,,,1,0,*Optional,,TRUE
+Bowdoin College,Explore Bowdoin,,admissions@bowdoin.edu,,"August 14, 2023",https://www.bowdoin.edu/admissions/visit/explore-bowdoin/index.html,"FGLI, minorities",09/19 - 09/21,10/24 - 10/26,,1,0,,,TRUE
+Brandeis University,SEED,,admissions@brandeis.edu,,"September 8, 2023",https://www.brandeis.edu/admissions/seed/,"FGLI, minorities",10/20 - 10/21,,,2,0,,,TRUE
+Bryn Mawr College,Lantern Scholars,,admissions@brynmawr.edu,,"July 15, 2024",https://www.brynmawr.edu/admissions-aid/visit-bryn-mawr/fly-programs,"FGLI, minorities, women(!)",10/5 - 10/7,,,1,0,,,TRUE
+Bucknell University,Journey to Bucknell,,admissions@bucknell.edu,,"October 4, 2023",https://www.bucknell.edu/meet-bucknell/plan-visit/camps-conferences-visit-programs/journey-bucknell,"FGLI, minorities",10/3 - 10/5,10/24 - 10/16,,3,0,"Must live in or near these regions: Baltimore, MD; Philadelphia, PA; New York, NY; and Washington, D.C. Journey to Bucknell participants are required to be accompanied by a parent or guardian.","Hotel, requires chaperone",TRUE
+California Institute of Tech,CalTech Up Close,,ugadmissions@caltech.edu,,"August 6, 2023",https://www.admissions.caltech.edu/visit/visit-campus/fall-fly-in-program-caltech-up-close,"FGLI, minorities, STEM",10/12-10/15,,,2,0,Decisions will be released in September,,TRUE
+California Institute of Tech,Summer Preview: Women in STEM,,ugadmissions@caltech.edu,,"June 20, 2023",https://www.admissions.caltech.edu/visit/visit-campus/summer-preview-women-stem,"women/non-binary, juniors, seniors, STEM",08/02 - 08/04,,,,,No Amounts paid for Students,,TRUE
+Carleton College,TOC,,admissions@carleton.edu,,"July 21, 2023",https://www.carleton.edu/admissions/visit/toc/,"FGLI, minorities",10/08 - 10/10,,,3,0,May submit an optional resume.,,TRUE
+Carnegie Mellon University,Celebration of Diversity,,admission@andrew.cmu.edu,,,https://www.cmu.edu/admission/visit/online-visit/celebration-of-diversity-series,"FGLI, minorities",,,,0,0,Register for different events happening on different days.,,FALSE
+Case Western Reserve University,Diversity Overnight,,admission@case.edu,,"October 2, 2023",https://case.edu/admission/diversity-overnight,"FGLI, minorities",11/12 - 11/13,,,2,0,Must fill out other forms.,,TRUE
+Claremont McKenna College,Fall Preview,,admission@cmc.edu,,"August 21, 2023","https://www.cmc.edu/admission/visit/diversityflyin#:~:text=During%20the%20Fall%2C%20Claremont%20McKenna,demonstrate%20strong%20academic%20excellence%20and","FGLI, minorities",10/08 - 10/10,,,,,,,TRUE
+Colgate University,Colgate in Focus,,admission@colgate.edu,,"August 1, 2023",https://www.colgate.edu/admission-aid/visit/colgate-focus,"FGLI, minorities",10/01 - 10/02,,,,,Priority consideration will be given to those who have attended or viewed the summer webinar series.,,FALSE
+College of the Atlantic,Fall Fly-In,,inquiry@coa.edu,,"July 15, 2023",https://www.coa.edu/admissions/admission-events/fall-fly-in/,"FGLI, minorities",09/28 - 10/01,,,2,0,,,TRUE
+College of Holy Cross,Perspectives,,admissions@holycross.edu,,"October 1, 2023",https://www.holycross.edu/perspectives-overnight-program,"FGLI, minorities",11/04 - 11/06,,,2,0,"Students must attend with one parent, guardian, or community mentor (i.e., college counselor). Travel grants are available upon request in the application form.",,TRUE
+Colorado College,ECC,,admission@coloradocollege.edu,,"September 1, 2023",https://www.coloradocollege.edu/flyin/,"FGLI, minorities, gap year",10/07 - 10/09,,,2,0,Decisions are released on a rolling basis starting in mid-August 2023.,,TRUE
+Columbia University,CE^2,,ugrad-epc@columbia.edu,,"September 6, 2023",https://undergrad.admissions.columbia.edu/columbia-engineering-experience-ce2,"FGLI, minorities, engineering",10/08 - 10/10,,,,,,,TRUE
+Columbia University,STARS,,ugrad-epc@columbia.edu,,"September 6, 2023",https://undergrad.admissions.columbia.edu/update/stars-fly-in,rural/small town students,10/21 - 10/23,,,,,,,TRUE
+Connecticut College,Explore,,admission@conncoll.edu,,"September 15, 2023",https://www.conncoll.edu/explore/,"FGLI, minorities",11/05 - 11/07,,,2,0,,,TRUE
+Dartmouth College,Dartmouth Bound,,admissions.reply@dartmouth.edu,,"May 23, 2023",https://admissions.dartmouth.edu/visit/visitation-programs/dartmouth-bound-summer-program,"FGLI, minorities",07/16 - 07/19,,,,0,,,TRUE
+Dartmouth College,Indigenous Fly-In Program,,admissions.reply@dartmouth.edu,,"July 21, 2023",https://admissions.dartmouth.edu/visit/visitation-programs/indigenous-fly-program,Indigenous students and/or those interested in Native studies,08/08 - 08/11,,,,1,,,TRUE
+Davidson College,Access Davidson,,admission@davidson.edu,,"August 1, 2023",https://www.davidson.edu/admission-and-financial-aid/plan-visit/open-house-programs/access-davidson,"FGLI, minorities",09/10 - 09/12,,,1,0,,,TRUE
+Denison University,Dialogue,,admissions@denison.edu,,"September 1, 2023",https://denison.edu/campus/admission/dialogue-with-denison,"FGLI, minorities",10/22 - 10/23,,,1,0,,,TRUE
+Dickinson College,You Belong,,admissions@dickinson.edu,,"September 20, 2023",https://www.dickinson.edu/info/20255/visit/1058/discover_diversity_at_dickinson,"FGLI, minorities",,,,1,0,You must fill out the Dickinson FlexApp in addition to this form.,LOOKS LIKE ITS NOT REIMBURSED,TRUE
+Emory University,LEADs,,admission@emory.edu,,"September 8, 2023",https://apply.emory.edu/core/core.html,"FGLI, minorities",10/12 - 10/14,,,2,0,"Hybrid programming with opportunity to join in-person fly in programming. While students need to complete an application by September 8th to be considered for the fly-in, in-person Leadership Retreat in October, our monthly virtual webinars and other LEADs Experience resources will be open to all applicants – including those who apply after September 8th.",,TRUE
+Franklin & Marshall College,Collegiate Leadership Summit,,admission@fandm.edu,,,https://www.fandm.edu/summit,"FGLI, minorities",,,,,,,STILL GONE PROBABLY,FALSE
+George Washington University,YourGW,,gwadm@gwu.edu,,,https://undergraduate.admissions.gwu.edu/campus-visit-faqs,"FGLI, minorities",,,,,,,ON HITATUS,FALSE
+Grinnell College,Discover / Diversity Preview,,admission@grinnell.edu,,,https://www.grinnell.edu/admission/visit/on-campus/programs,"FGLI, minorities, internationals",10/07,10/08,,,,,,TRUE
+Hamilton College,Home at Hamilton,,admission@hamilton.edu,,"September 1, 2023",https://www.hamilton.edu/admission/promise-program,"FGLI, minorities",10/22 - 10/23,11/05,,2,0,The virtual event is open to all high school students.,,TRUE
+Harvey Mudd College,FAST,,admission@hmc.edu,,"August 14, 2023",https://www.hmc.edu/admission/fast/,"FGLI, minorities, STEM",09/17 - 9/19,10/26 - 10/27,,1,0,"Due 12:00PM PST. September FAST is geared towards students outside of the Southern CA area. October FAST will prioritize students from our local area (within 250 miles from Claremont, CA)",,TRUE
+Harvey Mudd College,WISTEM,,admission@hmc.edu,,,https://www.hmc.edu/admission/wistem/,"juniors, women",,,,,,Must be located on the west coast or in a southwest state. Undocumented students may apply.,,TRUE
+Haverford College,HAVE-A-LOOK,,admission@haverford.edu,,"August 14, 2023",https://www.haverford.edu/havealook,"FGLI, minorities",10/29 - 10/31,,,2,0,Rolling applications,,TRUE
+Johns Hopkins University,,,gotojhu@jhu.edu,,,https://apply.jhu.edu/home-program/,"FGLI, minorities",,,,,,,SEEMS TO BE CANCELLED,FALSE
+Lafayette College,OBC,,admissions@lafayette.edu,,,https://admissions.lafayette.edu/our-beloved-community/,"FGLI, minorities",,,,0,0,,,TRUE
+Lehigh University,DAP,,admissions@lehigh.edu,,"September 15, 2023",https://www1.lehigh.edu/admissions/diversity-achievers-program,"FGLI, minorities",10/21 - 10/22,,,1,0,Need to submit a Parent Agreement Form. Application materials are due by 11:59 p.m. EDT. Only complete applications submitted by the deadline will be considered.,SEEMS TO BE VIRTUAL,FALSE
+Macalester College,Multicultural Visit Program,,admissions@macalester.edu,,,https://www.macalester.edu/admissions/multicultural-visit-program/,"FGLI, minorities",,,,2,0,Applicants will be notifed September 28th. Students who will be driving will receive a reimbursement.,COULDNT FIND,FALSE
+Massachusetts Institute of Tech,WISE,,admissions@mit.edu,,"August 19, 2023",https://mitadmissions.org/pages/wise/,"FGLI, minorities, STEM",10/15 - 10/17,,,4,0,,,TRUE
+Miami University,Bridges,,admission@miamioh.edu,,"September 25, 2023",https://miamioh.edu/visit-miami/bridges-program/index.html,"FGLI, minorities",10/22 - 10/23,11/05 - 11/06,11/12 - 11/13,2,1,"Applications will be accepted on a rolling basis until Monday, Sept. 25, 2023. Priority consideration for Session I will be given to students who live in Columbus or Chillicothe/Portsmouth areas AND who complete their entire Bridges application by Monday, Sept. 18.",,TRUE
+Middlebury College,Discover Middlebury,,admissions@middlebury.edu,,"September 8, 2023",https://www.middlebury.edu/college/admissions/visit-us/special-visits,"FGLI, minorities",10/08 - 10/10,,,2,0,*Elevator pitch video is optional,,TRUE
+Mount Holyoke College,Mosaic,,admission@mtholyoke.edu,"September 15, 2023","October 20, 2023",https://www.mtholyoke.edu/admission/virtual-visits,"FGLI, minorities, women(!)",09/30 - 10/02,11/04 - 11/06,,6,0,*5 are short answers (1-3 sentences),ISNT THERE,FALSE
+Northeastern University,Fall Fly-In,,admissions@northeastern.edu,,,https://www.northeastern.edu/admissions/virtual-experience/,"FGLI, minorities",,,,,,,ISNT THERE,FALSE
+Oberlin College,Overnight Program,,college.admissions@oberlin.edu,,"September 24, 2023",https://www.oberlin.edu/admissions-and-aid/visit-and-connect/visit-programs/mvp,"FGLI, minorities",10/26 - 10/28,11/09 - 11/11,10/12 - 10/13,1,,"The priority deadline to apply for all overnight programs is September 24, 2023. Applications may continue to be accepted after this date until all programs are full. Applications will be released on a rolling basis. Questbridge Match or Posse Scholars applicants are ineligible to apply.",,TRUE
+Occidental College,TAP,,admission@oxy.edu,,"September 13, 2023",https://www.oxy.edu/admission-aid/visit-explore-campus/tiger-access-program,"FGLI, minorities",10/01,11/09 - 11/11,,2,0,"To be considered for the in-person fly in, you must be nominated by a CBO or counselor, or nominate yourself.","NOT THERE, THINK IT WILL BE LATER",FALSE
+Olin College,Mix & Mingle Fly-In,,info@olin.edu,,"September 15, 2023",https://admission.olin.edu/register/2024MIX&MingleNomination,"FGLI, minorities, engineering",11/05 - 11/06,,,0,0,"This is a counselor nomination form due by 09/15. You cannot self-nominate yourself.  The student's Olin Mix & Mingle Interest Form must be completed by Friday, September 22, 2023, in order for the student to be considered for the Mix & Mingle Fly-In.",,TRUE
+Pitzer College,Preview Pitzer,,admission@pitzer.edu,,"August 27, 2023",https://www.pitzer.edu/admission/preview-pitzer/,"FGLI, minorities",10/08 - 10/10,,,2,0,,,TRUE
+Pomona College,POP,,admissions@pomona.edu,"August 14, 2023","September 29, 2023",https://www.pomona.edu/admissions/why-pomona/diversity-pomona/virtual-perspectives-pomona-pop,"FGLI, minorities",10/01 - 10/03,10/19 - 10/21,,1,0,One will be in-person and the other will be virtual.,,TRUE
+Providence College,Pathways to PC,,admission@providence.edu,,,https://admission.providence.edu/visit/pathways/,"FGLI, minorities",,,,,,Form provided to request travel assistance or overnight accommodation.,,TRUE
+Reed College,Junior Scholars,,admission@reed.edu,,"October 2, 2023",https://www.reed.edu/apply/visit/juniorscholars.html,"FGLI, minorities",,,,1,0,"Junior Scholars sessions will take place virtually October through April, with different rounds of programming and deadlines.","VIRTUAL PROGRAM, IS LAME",FALSE
+Rensselaer Polytechnic Institute,STAR,,admissions@rpi.edu,,,https://admissions.rpi.edu/STAR,"FGLI, minorities",,,,0,0,,DIDNT SEE ANYTHING AFTER 2017,FALSE
+Rice University,SOAR,,admission@rice.edu,,,https://admission.rice.edu/life-rice/diversity,"FGLI, minorities",,,,1,0,Usually invite only. Unsure how one gets an invite; sign up for mailing lists and all that.,SOAR MIGHT BE INVITE ONLY?,FALSE
+Scripps College,Discover Scripps,,admission@scrippscollege.edu,,"August 16, 2023",https://www.scrippscollege.edu/admission/discover-scripps-program,"FGLI, minorities, women(!)",10/01 - 10/02,10/08 - 10/09,,2,0,Will cover round-trip airfare to students who live 150 miles away.,,TRUE
+Smith College,Women of Distinction,,admission@smith.edu,"June 30, 2023","September 15, 2023",https://www.smith.edu/women-distinction-program#eligibility-0,"FGLI, minorities, women(!)",10/13 - 10/14,11/10 - 11/11,,1,0,Applicants will be notified in Late July.,,TRUE
+St. Olaf College,Fall Fly-In,,admissions@stolaf.edu,,,https://wp.stolaf.edu/admissions/counselors/fly-in/,"FGLI, minorities",,,,,,,NOT FOUND,FALSE
+Swarthmore College,Discover Swarthmore,,admissions@swarthmore.edu,,"July 7, 2023",https://www.swarthmore.edu/admissions-aid/discover-swarthmore-fly-program,"FGLI, minorities",09/28 - 09/30,10/26 - 10/28,,2,0,Transcript due by July 14th. 3 optional short essays alongside the main essay.,,TRUE
+Trinity College,Bantum Bound,,admissions.office@trincoll.edu,,"September 25, 2023",https://www.trincoll.edu/admissions/bantam-bound/,"FGLI, minorities",11/12 - 11/13,,,,,,,TRUE
+Tufts University,Voices,,admissions.inquiry@tufts.edu,,"July 17, 2023",https://admissions.tufts.edu/voices/voices-home/,"FGLI, minorities",10/01 - 10/02,10/14 - 10/15,,2,0,Deadline is at 7PM EST.,,TRUE
+Tulane University,PreviewTU,,admissions@tulane.edu,,,https://admission.tulane.edu/student-life/diversity/multicultural-access-programs,"FGLI, minorities",10/14,10/10 - 10/12,,1,0,"Travel reimbursement stipends will be approved on a first-come, first-served, rolling basis. For priority consideration, please submit your registration form by September 5th.",,TRUE
+Union College,Getting to Know Union,,admissions@union.edu,,"September 27, 2023",https://www.union.edu/admissions/getting-to-know-union,"FGLI, minorities",10/08 - 10/09,,,1,0,"Must be located within the northeast region (NY, CT, NJ, MA).",,TRUE
+University of Denver,Pioneer Prep,,admission@du.edu,,"May 3, 2023",https://www.du.edu/admission-aid/undergraduate/pioneer-prep,Black and/or Latinx students,07/17 - 07/21,,,,,"Program cost is $65, with scholarship consideration for families who demonstrate financial hardship
+For Non-Colorado applicants only: travel stipends are limited and evaluated on a case-by-case basis.",,TRUE
+"University of Michigan, Ross",All-Access,,info@admission.edu,,"June 30, 2023",https://michiganross.umich.edu/about/events/all-access-weekend,"FGLI, minorities, business",09/28 - 09/30,,,,,"Free to attend, up to two parents/guardians",,TRUE
+University of Pennsylvania,PEEP,,info@admissions.upenn.edu,,"May 31, 2023",https://admissions.upenn.edu/penn-early-exploration-program-0,"FGLI, minorities",08/09 - 09/06,,,1,0,,,TRUE
+University of Pennsylvania,PIF,,info@admissions.upenn.edu,,"August 4, 2023",https://admissions.upenn.edu/penn-early-exploration-program-0,minorities,09/30,,,2,0,Must live within a 150-mile radius of the campus.,SEEMS TO NOT BE THERE,FALSE
+University of Richmond,Access Richmond,,admissions@richmond.edu,,"September 15, 2023",https://admissions.richmond.edu/visit/open-houses.html,"FGLI, minorities",10/20 - 10/21,,,1,0,,"DOESNT SEEM TO BE A FLY-IN, MORE OF A VISIT PROGRAM",FALSE
+University of Rochester,MVP,,admissions@rochester.edu,,"October 6, 2023",https://admissions.rochester.edu/visit/multicultural-visitation-program/,"FGLI, minorities",11/09 - 11/10,,,2,0,,,TRUE
+University of Vermont,Discovering UVM,,admissions@uvm.edu,"September 18, 2023","September 25, 2023",https://www.uvm.edu/admissions/undergraduate/discovering-uvm,"FGLI, minorities",10/22 - 10/24,11/05 - 11/07,,1,0,,,TRUE
+University of Virginia,HOOS First Look,,undergradadmission@virginia.edu,,,https://hoosfirstlook.com/,"FGLI, minorities, juniors",,,,,1,*Counselor Verification form required.,,TRUE
+Vassar College,View,,admission@vassar.edu,,,https://www.vassar.edu/admissions/vassarview,"FGLI, minorities",,,,,,,SEEMS TO BE OVERNIGHT STAY PROGRAM,FALSE
+Washington & Lee University,DIVE,,admissions@wlu.edu,,"August 18, 2023",https://www.wlu.edu/admissions/visit/dive/,"FGLI, minorities",09/24 - 09/26,10/01 - 10/03,,1,0,Unsure when the deadline is.,,TRUE
+Washington University in St. Louis,Preview Days,,admissions@wustl.edu,,"June 2, 2023",https://admissions.wustl.edu/preview-days/,"FGLI, minorities",07/26 - 07/28,07/30 - 08/01,,1,0,,,TRUE
+Wellesley College,Discover Wellesley,,admission@wellesley.edu,,,https://www.wellesley.edu/admission/diversity/travelgrant,"FGLI, minorities, women(!)",,,,,,,,TRUE
+Wellesley College,VOICE,,admission@wellesley.edu,"July 19, 2023","September 13, 2023",https://calendar.wellesley.edu/admission/diversity/travelgrant,"FGLI, minorities, women(!)",09/30 - 10/01,,,1,0,Virtual program.,,FALSE
+Wesleyan College,WesExplore,,admission@wesleyan.edu,,"September 15, 2023",https://www.wesleyan.edu/admission/visit-connect/wesexplore.html,"FGLI, minorities",,,,2,0,,,TRUE
+Whitman College,Visit Scholarship Program,,admission@whitman.edu,,"September 30, 2023",https://www.whitman.edu/admission-and-aid/visit-whitman/visit-scholarship-program,"FGLI, minorities",10/28,,,1,0,,,TRUE
+Williams College,WOW,,admission@williams.edu,"July 1, 2023","August 1, 2023",https://www.williams.edu/admission-aid/wow/,"FGLI, minorities",09/28 - 09/30,,,0,0,Requires a writing sample from the 22-23 academic school year,,TRUE
+Yale University,Yale in Motion,,student.questions@yale.edu,"July 1, 2024","July 1, 2024",https://admissions.yale.edu/Yale-in-MOHtion,"FGLI, Unable to visit Yale on their own",10/4 - 10/6,,,,,,,TRUE
+
+File: 
+Pre-College Programs - Precollege-Programs for CSV (1).csv
+Content: 
+id,organization,name,apply_link,deadline,grade_eligibility
+1,Questbridge,College Prep Scholars,college-prep-scholars,"March 20, 2025",11
+2,LEDA,Leadership Enterprise for a Diverse America (LEDA),https://ledascholars.org/,"December 11, 2024",11
+3,Thrive,Thrive Scholars 6 Year Program,https://www.thrivescholars.org,"December 15, 2024",11
+4,MIT,Women's Technology Program (WTP),https://web.mit.edu/wtp/,"January 15, 2025",11
+5,Thrive,Thrive OnRamp,https://apply.thrivescholars.org/onramp,"December 15, 2024",10
+6,USC Bovard,Bovard Scholars,https://bovardscholars.usc.edu/,"January 17, 2025",11
+7,Matriculate,Matriculate High School Fellows,https://matriculate.org/,Opens February 2025,"11, 12"
+8,MITES,"MIT Intro to Tech, Engineering, and Science",https://mites.mit.edu/,"February 1, 2025",11
+9,Alexander Hamilton Scholars,Hamilton Scholars,https://www.hamiltonscholars.org/,"January 31, 2025",11
+10,Carnegie Melon University,Carnegie Mellon's Pre-College Programs,https://www.cmu.edu/pre-college/index.html,"March 1, 2025","10, 11"
+11,Carnegie Melon University,Summer Academy for Math and Science (SAMS),https://www.cmu.edu/pre-college/academic-programs/sams.html,"March 1,2025",11
+12,Kettering University AIM,Academically Interested Minds (AIM),https://www.kettering.edu/academics/precollege/AIM,NaN,12
+13,Hispanic Scholarship Fund,HSF Scholar Program,https://www.hsf.net/,"February 15, 2025",11
+14,Arizona State University,Barrett Summer Scholars (BSS), https://eoss.asu.edu/bss,"March 24, 2024",Rising 8 - 11
+15,Brown Pre-college Programs,Brown Pre-college Programs,https://precollege.brown.edu/?utm_source=google&utm_medium=cpc,"May 9, 2025",9 - 12
+16,Washington University in St. Louis,Washington University Pre-college Programs,https://precollege.wustl.edu/,"April 1, 2025","10, 11"
+17,Stanford University,Stanford Math Circle,https://mathcircle.spcs.stanford.edu/,NaN,9 - 12
+18,Vanderbilt University,Mentor Immersion at Vanderbilt Program for Talented Youth,https://pty.vanderbilt.edu/,Rolling,10 - 12
+19,Stanford University,Stanford Pre-collegiate Summer Institutes,https://spcs.stanford.edu/,"March 20, 2025",8 - 11
+20,University of Chicago,Uchicago Summer Immersion Sessions,https://summer.uchicago.edu/pre-college/pre-college/3-week-immersion/,"March 5, 2025",9 - 11
+21,Brown Pre-college Programs,Brown Environmental Leadership Labs (BELL),https://precollege.brown.edu/programs/bell-program,"March 31, 2025",10 - 12
+22,Yale University,Yale Young Global Scholars (YYGS),https://globalscholars.yale.edu/,"January 10, 2025",10 - 11
+23,Arizona State University,Cesar E. Chavez Institute Leadership Institute (CCLI),https://eoss.asu.edu/access/cesar-e-chavez-leadership-institute,NaN,"10, 11"
+24,Stanford University,Stanford University Mathematics Camp (SUMaC),https://sumac.spcs.stanford.edu/,"February 3, 2025","10, 11"
+25,Vanderbilt University,Vanderbilt Summer Academy ,https://pty.vanderbilt.edu/vsa-2025-courses/,Rolling,9 - 12
+26,Stanford University,Stanford Summer Humanities Institute (SSHI),https://spcs.stanford.edu/programs/stanford-summer-humanities-institute,"February 3, 2025",10 - 11
+27,Harvard University ,Harvard's Pre-college Program,https://summer.harvard.edu/high-school-programs/pre-college-program/#what-is-a-pre-college-program,"February 12, 2025",10 - 11
+28,Boston University ,High School Honors,https://www.bu.edu/summer/high-school-programs/high-school-honors/,"May 23, 2025",10 - 11
+29,Boston University ,RISE Internship/Practicum,https://www.bu.edu/summer/high-school-programs/rise-internship-practicum/,"February 14, 2025",11
+30,Boston University ,Academic Immersion,https://www.bu.edu/summer/high-school-programs/academic-immersion/,Rolling,10 - 11
+31,Brown Pre-college Programs,Leadership Institute,https://precollege.brown.edu/programs/leadership-institute,Rolling,9 - 12
+32,Brown Pre-college Programs,Brown Experiential Education,https://precollege.brown.edu/programs/brown-experiential-education-bee,"May 9, 2025",10 - 12
+33,Tufts University,Pre-College Programs at Tufts,https://universitycollege.tufts.edu/pre-college,"May 1, 2025",9 - 12
+34,Posse,Posse Foundation,https://www.possefoundation.org/,NaN,12
+35,Jack Kent Cooke Foundation,JKC Young Scholars,https://www.jkcf.org/our-scholarships/young-scholars-program/,"April 30, 2025",7
+36,Columbia Climate School,Columbia Climate School in the Green Mountains,https://www.climate.columbia.edu/green-mountains,Rolling,9 - 12
+37,MIT,Mathroots,https://mathroots.mit.edu/,"March 3, 2025",9 - 12
+38,MIT,Summer Science Program,https://summerscience.org/,"February 21, 2025",11
+39,Texas Tech University,Clark Scholars Program,https://www.depts.ttu.edu/clarkscholars/about.php,"February 24, 2025",11
+40,Stony Brook University ,Summer Research Program,https://www.stonybrook.edu/commcms/garcia/summer_program/program_description,"March 3, 2025",10 - 12
+41,Michigan State University,"High School Honors Science, Math and Engineering Program (HSHSP)",https://education.msu.edu/hshsp/,Not offered for 2025,11
+42,Stanford University,Stanford Institutes of Medicine Summer Research Program,https://simr.stanford.edu/,"February 22, 2025",10 - 11
+43,CPET University of Florida,Student Science Training Program,https://www.cpet.ufl.edu/students/uf-cpet-summer-programs/student-science-training-program/,"April 1, 2025",12
+44,SPARC,Summer Program on Applied Rationality and Cognition (SPARC),https://www.sparc.camp/,"February 2, 2025",11 - 12
+45,Awesome Math,Awesome Math Summer Program,https://www.awesomemath.org/,"February 20, 2025",6 - 12
+46,MathCamp,Canada/USA Mathcamp,https://www.mathcamp.org/,"February 26, 2025",9 - 12
+47,Hampshire College,Hampshire College Summer Studies in Mathematics (HCSSiM),https://hcssim.org/,Rolling,10 -11
+48,MathILy,Mathematics Infused with Levity (MathILy),https://www.mathily.org/,"April 29, 2025",9 - 11
+49,PROMYS,Program in Mathematics for Young Scientists (PROMYS),https://promys.org/,"March 3, 2025",9 - 12
+50,Prove it!,Prove it! Math Academy,https://proveitmath.org/,Not offered for 2025,9 - 11
+51,Ross Mathematics Program,Ross Mathematics Program ,https://rossprogram.org/,"March 15, 2025",9 - 12
+52,Texas State University,Honors Summer Math Camp (HSMC),https://www.txst.edu/mathworks/camps/Summer-Math-Camps-Information/hsmc.html,"February 15, 2025",9 - 12
+
+File: 
+Scholarships Sheet - CSV.csv
+Content: 
+id,name,amount,open_date,deadline,description,apply_link,tags
+1,Cameron Impact Scholarship,"$50,000",,9/5/24,Academics & Public/Community Service,https://www.bryancameroneducationfoundation.org/scholarship,Academics,Community Service
+2,The Gates Scholarship,Full Tuition,,9/15/24,"Minorities, Financial Need, Academics & Leadership",https://www.thegatesscholarship.org/scholarship,,,,,,,
+3,QuestBridge National College Match,Full Tuition,,9/26/24,"Financial Need, Academic Success",https://www.questbridge.org/for-students/ncm-national-college-match,,,,,,,
+4,AES Engineering Scholarship Opportunity,$500,,10/6/24,"Character, Success",https://www.aesengineers.com/scholarships.php,,,,,,,
+5,Dr. Pepper Tuition Giveaway,"$100,000",,10/17/24,One of a Kind Goal,https://www.drpeppertuition.com/,,,,,,,
+6,US Senate Youth Program,"$10,000",,10/19/24,"Plan to Study History or Political Science, Academics, Leadership, Community Involvement, Extracurriculars",https://ussenateyouth.org/,,,,,,,
+7,Horatio Alger Scholarship Award,Varies,,10/25/24,"Financial Need, Overcoming Obstacles",https://www.horatioalger.org/,,,,,,,
+8,Coca-Cola Scholars Program,"$20,000",,10/31/24,Academics,https://www.coca-colascholarsfoundation.org/,,,,,,,
+9,American Legion Oratorical Scholarship,"$30,000",,10/31/24,Voting,https://www.legion.org/get-involved/scholarships/national-high-school-oratorical-contest-scholarship,,,,,,,
+10,Prudential Emerging Visionaries,"$5,000",,11/5/24,Community Service,https://www.changemakers.com/en/challenge/emergingvisionaries/eligibility-criteria-awards,,,,,,,
+11,School House Scholarship,"$1,000",,11/9/24,Must have been homeless in the last 6 years,https://www.schoolhouseconnection.org/youth-leadership/scholarship-program/,,,,,,,
+12,The George S. and Stella M. Knight Essay Contest,Varies,,2/15/25,American Revolution/Declaration of Independence/United States Constitution,https://www.jkcf.org/scholarship-programs/college-scholarship/,,,,,,,
+13,Dr. Juan Andrade Young Hispanic Scholars,"$1,000",,12/31/24,"Hispanic, Financial Need",https://www.ushli.org/dr-juan-andrade-jr-scholarship-for-young-hispanic-leaders/,,,,,,,
+14,Andrew Flusche Scholarship Contest,$500,,4/30/25,Avoiding Distracted Driving,https://www.andrewflusche.com/scholarship/,,,,,,,
+15,2019 National Space Club and Foundation Keynote Scholar,"$10,000",,11/1/24,"U.S. Citizen, Must Pursue a STEM Major",https://www.spaceclub.org/scholarship/index.html,,,,,,,
+16,Bookoo Scholarship,"$1,000",,12/1/24,Educational Plans,https://www.bookoo.com/scholarships,,,,,,,
+17,College Scholarship,"$1,000",,12/1/24,"Innovation, Influence, Positive Change, Creative Thinking",https://lambergoodnow.com/scholarships/#college,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,semesterly scholarship!!!
+
+File: 
+app/__init__.py
+Content: 
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from app.config import Config
+
+# Initialize extensions
+db = SQLAlchemy()
+login_manager = LoginManager()
+migrate = Migrate()
+
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    # Initialize Flask extensions
+    db.init_app(app)
+    login_manager.init_app(app)
+    migrate.init_app(app, db)
+
+    # Set up login manager
+    login_manager.login_view = 'auth.login'
+    login_manager.login_message_category = 'info'
+
+    # Register blueprints
+    from app.routes.main import main_bp
+    from app.routes.auth import auth_bp
+    from app.routes.resources import resources_bp
+    from app.routes.applications import applications_bp
+    from app.routes.blog import blog_bp
+
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(resources_bp)
+    app.register_blueprint(applications_bp)
+    app.register_blueprint(blog_bp)
+
+    return app 
+
+File: 
+app/config.py
+Content: 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'postgresql://postgres:postgres@localhost/college_access_db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SUPABASE_URL = os.environ.get('SUPABASE_URL')
+    SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY')
+
+    # Resource type configurations
+    RESOURCE_TYPES = {
+        'scholarship': {
+            'display_name': 'Scholarship',
+            'fields': {
+                'amount': 'Amount',
+                'open_date': 'Open Date'
+            },
+            'tasks': [
+                "Review eligibility requirements",
+                "Gather required documents",
+                "Write required essays",
+                "Request recommendation letters",
+                "Submit application"
+            ]
+        },
+        'fly-in': {
+            'display_name': 'Fly-In Program',
+            'fields': {
+                'location': 'Location',
+                'dates': 'Program Dates',
+                'travel_covered': 'Travel Coverage',
+                'housing': 'Housing Details'
+            },
+            'tasks': [
+                "Check eligibility",
+                "Gather required documents",
+                "Request recommendation letters",
+                "Plan travel arrangements",
+                "Submit application"
+            ]
+        },
+        'pre-college': {
+            'display_name': 'Pre-College Program',
+            'fields': {
+                'duration': 'Program Duration',
+                'cost': 'Program Cost',
+                'location': 'Location',
+                'dates': 'Program Dates',
+                'housing': 'Housing Details'
+            },
+            'tasks': [
+                "Review program details",
+                "Check costs and financial aid",
+                "Gather application materials",
+                "Submit application",
+                "Plan travel if needed"
+            ]
+        }
+    } 
+
+File: 
+app/models/__init__.py
+Content: 
+from .user import User
+from .resource import Resource
+from .tag import Tag, resource_tags
+from .task import Task
+from .application import Application
+from .todo import Todo
+from .blog_post import BlogPost
+from .blog_category import BlogCategory
+
+# This allows us to import all models from app.models
+__all__ = [
+    'User',
+    'Resource',
+    'Tag',
+    'Task',
+    'Application',
+    'Todo',
+    'BlogPost',
+    'BlogCategory',
+    'resource_tags'
+] 
+
+File: 
+app/models/application.py
+Content: 
+from app import db
+from datetime import datetime
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
+
+class Application(db.Model):
+    __tablename__ = 'applications'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+    resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=False)
+    status = db.Column(db.String(20), default='in_progress')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Bidirectional relationships to both User and Resource
+    user = db.relationship('User', back_populates='applications')
+    resource = db.relationship('Resource', back_populates='applications')
+    todos = db.relationship('Todo', back_populates='application', cascade='all, delete-orphan')
+    
+    def create_todos_from_tasks(self):
+        """Create Todo items for each Task associated with the Resource"""
+        from app.models.todo import Todo
+        
+        for task in self.resource.tasks:
+            todo = Todo(
+                application_id=self.id,
+                task_id=task.id,
+                due_date=task.due_date
+            )
+            db.session.add(todo) 
+
+File: 
+app/models/blog.py
+Content: 
+from app import db
+from datetime import datetime
+from sqlalchemy.dialects.postgresql import UUID
+
+class BlogPost(db.Model):
+    __tablename__ = 'blog_posts'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    author_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # The relationship to User is already defined in the User model with backref 
+
+File: 
+app/models/blog_category.py
+Content: 
+from app import db
+from datetime import datetime
+
+class BlogCategory(db.Model):
+    __tablename__ = 'blog_categories'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    slug = db.Column(db.String(50), nullable=False, unique=True)
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    posts = db.relationship('BlogPost', back_populates='category') 
+
+File: 
+app/models/blog_post.py
+Content: 
+from app import db
+from datetime import datetime
+from sqlalchemy.dialects.postgresql import UUID
+
+class BlogPost(db.Model):
+    __tablename__ = 'blog_posts'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), default='draft')  # draft, published
+    category_id = db.Column(db.Integer, db.ForeignKey('blog_categories.id'))
+    published_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    author_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+    
+    # Relationships
+    author = db.relationship('User', back_populates='blog_posts')
+    category = db.relationship('BlogCategory', back_populates='posts')
+    
+    def publish(self):
+        self.status = 'published'
+        self.published_at = datetime.utcnow() 
+
+File: 
+app/models/resource.py
+Content: 
+from app import db
+from datetime import datetime
+from .tag import resource_tags
+from sqlalchemy.dialects.postgresql import JSONB
+
+class Resource(db.Model):
+    __tablename__ = 'resources'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    deadline = db.Column(db.DateTime)
+    apply_link = db.Column(db.String(500))
+    resource_type = db.Column(db.String(50))  # 'scholarship', 'fly-in', 'pre-college'
+    attributes = db.Column(JSONB)  # Store type-specific fields
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    tags = db.relationship('Tag',
+                          secondary=resource_tags,
+                          back_populates='resources')
+    tasks = db.relationship('Task', back_populates='resource', cascade='all, delete-orphan')
+    applications = db.relationship('Application', back_populates='resource', cascade='all, delete-orphan')
+    
+    def starred_by(self, user):
+        """Check if resource is starred by specific user"""
+        return Application.query.filter_by(
+            user_id=user.id,
+            resource_id=self.id
+        ).first() is not None 
+
+File: 
+app/models/tag.py
+Content: 
+from app import db
+
+resource_tags = db.Table('resource_tags',
+    db.Column('id', db.Integer, primary_key=True),
+    db.Column('resource_id', db.Integer, db.ForeignKey('resources.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'))
+)
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    
+    # Relationship with Resource
+    resources = db.relationship('Resource',
+                              secondary=resource_tags,
+                              back_populates='tags') 
+
+File: 
+app/models/task.py
+Content: 
+from app import db
+from datetime import datetime
+
+class Task(db.Model):
+    __tablename__ = 'tasks'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=False)
+    due_date = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    resource = db.relationship('Resource', back_populates='tasks')
+    todos = db.relationship('Todo', back_populates='task', cascade='all, delete-orphan') 
+
+File: 
+app/models/todo.py
+Content: 
+from app import db
+from datetime import datetime
+
+class Todo(db.Model):
+    __tablename__ = 'todos'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(20), default='not_started')  # not_started, in_progress, completed
+    due_date = db.Column(db.DateTime)
+    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'), nullable=False)
+    application_id = db.Column(db.Integer, db.ForeignKey('applications.id'), nullable=False)
+    user_notes = db.Column(db.Text)
+    completed_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    task = db.relationship('Task', back_populates='todos')
+    application = db.relationship('Application', back_populates='todos')
+    
+    def mark_complete(self):
+        self.status = 'completed'
+        self.completed_at = datetime.utcnow() 
+
+File: 
+app/models/user.py
+Content: 
+from app import db, login_manager
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
+from .application import Application
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(str(id))
+
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    username = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(256))  # Increased length for scrypt hash
+    role = db.Column(db.String(20), default="user")  # user, blogger, admin
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    applications = db.relationship('Application', back_populates='user', cascade='all, delete-orphan')
+    blog_posts = db.relationship('BlogPost', back_populates='author', lazy='dynamic')
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def is_blogger(self):
+        """Check if user has blogger role"""
+        return self.role == "blogger"
+
+    def star_resource(self, resource):
+        """Helper method to create an application (star) for a resource"""
+        if not self.has_starred(resource):
+            application = Application(user=self, resource=resource)
+            db.session.add(application)
+            application.create_todos_from_tasks()
+            return application
+    
+    def has_starred(self, resource):
+        """Check if user has already starred this resource"""
+        from .application import Application
+        return Application.query.filter_by(
+            user_id=self.id, 
+            resource_id=resource.id
+        ).first() is not None 
+
+File: 
+app/routes/admin.py
+Content: 
+from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask_login import login_required, current_user
+from app.models import User
+from app import db
+
+admin_bp = Blueprint('admin', __name__)
+
+@admin_bp.route('/users/<uuid:id>/make-blogger', methods=['POST'])
+@login_required
+def make_blogger(id):
+    if not current_user.role == 'admin':
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('main.index'))
+    
+    user = User.query.get_or_404(id)
+    user.role = 'blogger'
+    db.session.commit()
+    flash(f'User {user.username} is now a blogger.', 'success')
+    return redirect(url_for('admin.users')) 
+
+File: 
+app/routes/applications.py
+Content: 
+from flask import Blueprint
+
+applications_bp = Blueprint('applications', __name__)
+
+@applications_bp.route('/applications')
+def index():
+    return "Applications index" 
+
+File: 
+app/routes/auth.py
+Content: 
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask_login import login_user, logout_user, login_required
+from app.models.user import User
+from app import db
+from supabase import create_client, Client
+import logging
+
+auth_bp = Blueprint('auth', __name__)
+
+def get_supabase() -> Client:
+    return create_client(
+        current_app.config['SUPABASE_URL'],
+        current_app.config['SUPABASE_ANON_KEY']
+    )
+
+@auth_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        if not email or not password:
+            flash('Email and password are required.', 'error')
+            return render_template('auth/login.html')
+        
+        try:
+            # Use Supabase auth
+            supabase = get_supabase()
+            auth_response = supabase.auth.sign_in_with_password({
+                "email": email,
+                "password": password
+            })
+            
+            if auth_response.user:
+                # Get or create user in our database
+                user = User.query.filter_by(email=email).first()
+                if not user:
+                    user = User(
+                        email=email,
+                        username=email.split('@')[0],
+                        id=auth_response.user.id
+                    )
+                    db.session.add(user)
+                    db.session.commit()
+                
+                login_user(user)
+                flash('Logged in successfully.', 'success')
+                return redirect(url_for('main.index'))
+            else:
+                flash('Login failed. Please check your credentials.', 'error')
+            
+        except Exception as e:
+            logging.error(f"Login error: {str(e)}")
+            flash('Invalid email or password', 'error')
+            
+    return render_template('auth/login.html')
+
+@auth_bp.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        username = request.form['username']
+        
+        # Input validation
+        if not email or not password or not username:
+            flash('All fields are required.', 'error')
+            return render_template('auth/register.html')
+        
+        # Check if user already exists
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            flash('Email already registered. Please login.', 'error')
+            return redirect(url_for('auth.login'))
+        
+        try:
+            # Register with Supabase
+            supabase = get_supabase()
+            auth_response = supabase.auth.sign_up({
+                "email": email,
+                "password": password,
+                "options": {
+                    "data": {
+                        "username": username
+                    }
+                }
+            })
+            
+            if auth_response.user:
+                # Create user in our database
+                try:
+                    user = User(
+                        email=email,
+                        username=username,
+                        id=auth_response.user.id
+                    )
+                    db.session.add(user)
+                    db.session.commit()
+                    
+                    flash('Registration successful! Please check your email to verify your account.', 'success')
+                    return redirect(url_for('auth.login'))
+                
+                except Exception as db_error:
+                    logging.error(f"Database error during user creation: {str(db_error)}")
+                    # Try to clean up Supabase user if database insert fails
+                    try:
+                        supabase.auth.admin.delete_user(auth_response.user.id)
+                    except:
+                        pass
+                    flash('An error occurred during registration. Please try again.', 'error')
+            else:
+                flash('Supabase registration failed. Please try again.', 'error')
+                
+        except Exception as e:
+            logging.error(f"Supabase registration error: {str(e)}")
+            error_message = str(e)
+            if 'User already registered' in error_message:
+                flash('Email already registered. Please login.', 'error')
+            else:
+                flash(f'Registration failed: {error_message}', 'error')
+    
+    return render_template('auth/register.html')
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    try:
+        supabase = get_supabase()
+        supabase.auth.sign_out()
+        logout_user()
+        flash('Logged out successfully.', 'success')
+    except Exception as e:
+        logging.error(f"Logout error: {str(e)}")
+        flash('Error during logout', 'error')
+    return redirect(url_for('main.index')) 
+
+File: 
+app/routes/blog.py
+Content: 
+from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask_login import login_required, current_user
+from app.models import BlogPost, User, BlogCategory
+from app import db
+from datetime import datetime
+
+blog_bp = Blueprint('blog', __name__)
+
+@blog_bp.route('/blog')
+def index():
+    """Show all published blog posts"""
+    posts = BlogPost.query.filter_by(status='published')\
+        .order_by(BlogPost.published_at.desc()).all()
+    categories = BlogCategory.query.all()
+    return render_template('blog/index.html', posts=posts, categories=categories)
+
+@blog_bp.route('/blog/new', methods=['GET', 'POST'])
+@login_required
+def new():
+    """Create new blog post (bloggers only)"""
+    if not current_user.is_blogger():
+        flash('You do not have permission to create blog posts.', 'error')
+        return redirect(url_for('blog.index'))
+    
+    if request.method == 'POST':
+        post = BlogPost(
+            title=request.form['title'],
+            content=request.form['content'],
+            author=current_user
+        )
+        if 'publish' in request.form:
+            post.publish()
+        
+        db.session.add(post)
+        db.session.commit()
+        
+        flash('Blog post created successfully!', 'success')
+        return redirect(url_for('blog.show', id=post.id))
+    
+    return render_template('blog/new.html')
+
+@blog_bp.route('/blog/<int:id>')
+def show(id):
+    """Show a specific blog post"""
+    post = BlogPost.query.get_or_404(id)
+    if post.status != 'published' and (not current_user.is_authenticated or post.author != current_user):
+        flash('This post is not available.', 'error')
+        return redirect(url_for('blog.index'))
+    return render_template('blog/show.html', post=post)
+
+@blog_bp.route('/blog/<int:id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    """Edit a blog post (author only)"""
+    post = BlogPost.query.get_or_404(id)
+    if post.author != current_user:
+        flash('You do not have permission to edit this post.', 'error')
+        return redirect(url_for('blog.show', id=id))
+    
+    if request.method == 'POST':
+        post.title = request.form['title']
+        post.content = request.form['content']
+        if 'publish' in request.form and post.status != 'published':
+            post.publish()
+        
+        db.session.commit()
+        flash('Blog post updated successfully!', 'success')
+        return redirect(url_for('blog.show', id=post.id))
+    
+    return render_template('blog/edit.html', post=post)
+
+@blog_bp.route('/blog/category/<slug>')
+def category(slug):
+    """Show posts in a specific category"""
+    category = BlogCategory.query.filter_by(slug=slug).first_or_404()
+    posts = BlogPost.query.filter_by(
+        category=category,
+        status='published'
+    ).order_by(BlogPost.published_at.desc()).all()
+    categories = BlogCategory.query.all()
+    return render_template('blog/index.html', 
+                         posts=posts, 
+                         categories=categories, 
+                         current_category=category) 
+
+File: 
+app/routes/main.py
+Content: 
+from flask import Blueprint, render_template
+from flask_login import login_required, current_user
+from app.models import Application
+from datetime import datetime
+
+main_bp = Blueprint('main', __name__)
+
+@main_bp.route('/')
+def index():
+    return render_template('main/index.html')
+
+@main_bp.route('/dashboard')
+@login_required
+def dashboard():
+    # Get user's applications (starred resources) with related tasks
+    applications = Application.query.filter_by(user_id=current_user.id)\
+        .order_by(Application.created_at.desc()).all()
+    
+    # Calculate completed tasks
+    completed_tasks = sum(
+        1 for app in applications 
+        for todo in app.todos 
+        if todo.status == 'completed'
+    )
+    
+    # Add current datetime for deadline comparisons
+    now = datetime.utcnow()
+    
+    return render_template('main/dashboard.html', 
+                         applications=applications,
+                         completed_tasks=completed_tasks,
+                         now=now) 
+
+File: 
+app/routes/resources.py
+Content: 
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from flask_login import login_required, current_user
+from app.models import Resource, Tag, Task, Todo, Application
+from app import db
+import csv
+from io import StringIO
+from datetime import datetime
+from flask import current_app
+
+resources_bp = Blueprint('resources', __name__)
+
+@resources_bp.route('/resources')
+def index():
+    resources = Resource.query.all()
+    return render_template('resources/index.html', resources=resources)
+
+@resources_bp.route('/resources/<int:id>')
+def show(id):
+    resource = Resource.query.get_or_404(id)
+    return render_template('resources/show.html', resource=resource)
+
+@resources_bp.route('/resources/<int:id>/star', methods=['POST'])
+@login_required
+def star(id):
+    resource = Resource.query.get_or_404(id)
+    if current_user.has_starred(resource):
+        flash('You have already starred this resource.', 'warning')
+    else:
+        application = current_user.star_resource(resource)
+        db.session.commit()
+        flash('Resource starred successfully!', 'success')
+    return redirect(url_for('resources.show', id=id))
+
+def process_csv(file_content, resource_type):
+    """Process CSV content and create resources with tags"""
+    csv_file = StringIO(file_content.decode('utf-8'))
+    reader = csv.DictReader(csv_file)
+    
+    # Get resource type configuration
+    type_config = current_app.config['RESOURCE_TYPES'].get(resource_type)
+    if not type_config:
+        flash(f'Invalid resource type: {resource_type}', 'error')
+        return False
+    
+    # Create resource type tag
+    type_tag = Tag.query.filter_by(name=resource_type).first()
+    if not type_tag:
+        type_tag = Tag(name=resource_type)
+        db.session.add(type_tag)
+    
+    resources_created = 0
+    for row in reader:
+        try:
+            if not row.get('name'):
+                continue
+                
+            # Create resource with common fields
+            resource = Resource(
+                name=row['name'],
+                description=row.get('description', ''),
+                deadline=datetime.strptime(row['deadline'], '%m/%d/%y') if row.get('deadline') else None,
+                apply_link=row.get('apply_link', ''),
+                resource_type=resource_type
+            )
+            
+            # Add type-specific attributes
+            attributes = {}
+            for field_key in type_config['fields'].keys():
+                if field_key in row:
+                    attributes[field_key] = row[field_key]
+            resource.attributes = attributes
+            
+            # Add tags
+            resource.tags.append(type_tag)  # Add resource type as tag
+            if row.get('tags'):
+                tag_names = [t.strip() for t in row['tags'].split(',')]
+                for tag_name in tag_names:
+                    tag = Tag.query.filter_by(name=tag_name).first()
+                    if not tag:
+                        tag = Tag(name=tag_name)
+                        db.session.add(tag)
+                    resource.tags.append(tag)
+            
+            # Add default tasks for this resource type
+            for task_name in type_config['tasks']:
+                task = Task(
+                    name=task_name,
+                    resource=resource
+                )
+                db.session.add(task)
+            
+            db.session.add(resource)
+            resources_created += 1
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error processing row: {str(e)}', 'error')
+            return False
+    
+    try:
+        db.session.commit()
+        return resources_created
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error saving to database: {str(e)}', 'error')
+        return False
+
+@resources_bp.route('/resources/import', methods=['GET', 'POST'])
+@login_required
+def import_resources():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file uploaded', 'error')
+            return redirect(request.url)
+        
+        file = request.files['file']
+        resource_type = request.form.get('resource_type')
+        
+        if file.filename == '':
+            flash('No file selected', 'error')
+            return redirect(request.url)
+        
+        if not resource_type:
+            flash('Resource type is required', 'error')
+            return redirect(request.url)
+        
+        if file and file.filename.endswith('.csv'):
+            result = process_csv(file.read(), resource_type)
+            if result:
+                flash(f'Successfully imported {result} resources', 'success')
+            return redirect(url_for('resources.index'))
+        
+        flash('Invalid file type. Please upload a CSV file.', 'error')
+        return redirect(request.url)
+    
+    return render_template('resources/import.html')
+
+@resources_bp.route('/todos/<int:id>/toggle', methods=['POST'])
+@login_required
+def toggle_todo(id):
+    todo = Todo.query.get_or_404(id)
+    # Ensure the todo belongs to the current user
+    if todo.application.user_id != current_user.id:
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
+    
+    todo.status = 'completed' if todo.status != 'completed' else 'not_started'
+    db.session.commit()
+    
+    return jsonify({
+        'status': 'success',
+        'todo_status': todo.status
+    })
+
+@resources_bp.route('/todos/create', methods=['POST'])
+@login_required
+def create_todo():
+    data = request.get_json()
+    
+    # Get the application and verify ownership
+    application = Application.query.get_or_404(data['application_id'])
+    if application.user_id != current_user.id:
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
+    
+    # Create a new task for this todo
+    task = Task(
+        name=data['name'],
+        resource=application.resource
+    )
+    db.session.add(task)
+    
+    # Create the todo
+    todo = Todo(
+        task=task,
+        application=application,
+        status='not_started'
+    )
+    if data.get('due_date'):
+        todo.due_date = datetime.strptime(data['due_date'], '%Y-%m-%d')
+    
+    db.session.add(todo)
+    
+    try:
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'todo': {
+                'id': todo.id,
+                'name': task.name,
+                'status': todo.status,
+                'due_date': todo.due_date.strftime('%Y-%m-%d') if todo.due_date else None
+            }
+        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500 
+
+File: 
+app/templates/auth/login.html
+Content: 
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Login</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %} 
+
+File: 
+app/templates/auth/register.html
+Content: 
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Register</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+{% endblock %} 
+
+File: 
+app/templates/base.html
+Content: 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Access - {% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
+
+File: 
+app/templates/blog/index.html
+Content: 
+{% extends "base.html" %}
+
+{% block title %}Blog Posts{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <h1 class="mb-4">Blog Posts</h1>
+            
+            {% if current_user.is_blogger() %}
+            <div class="mb-4">
+                <a href="{{ url_for('blog.new') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Post
+                </a>
+            </div>
+            {% endif %}
+            
+            {% if posts %}
+                {% for post in posts %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title h4">
+                            <a href="{{ url_for('blog.show', id=post.id) }}" class="text-decoration-none">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                        {% if post.category %}
+                            <span class="badge bg-secondary">{{ post.category.name }}</span>
+                        {% endif %}
+                        <p class="card-text text-muted small">
+                            By {{ post.author.username }} on {{ post.published_at.strftime('%B %d, %Y') }}
+                        </p>
+                        <p class="card-text">{{ post.content[:200] }}...</p>
+                        <a href="{{ url_for('blog.show', id=post.id) }}" class="btn btn-sm btn-outline-primary">
+                            Read More
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No posts found.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Categories</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for category in categories %}
+                        <li class="mb-2">
+                            <a href="{{ url_for('blog.category', slug=category.slug) }}" class="text-decoration-none">
+                                {{ category.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
+
+File: 
+app/templates/includes/navbar.html
+Content: 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">College Access</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('resources.index') }}">Resources</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('blog.index') }}">Blog</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.dashboard') }}">My Dashboard</a>
+                    </li>
+                    {% if current_user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('resources.import') }}">Import Resources</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav">
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav> 
+
+File: 
+app/templates/main/dashboard.html
+Content: 
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Dashboard</h1>
+
+    <div class="row">
+        <!-- Starred Resources -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">My Resources</h5>
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                        {% for application in applications %}
+                            <div class="resource-card mb-3">
+                                <h5>
+                                    <a href="{{ url_for('resources.show', id=application.resource.id) }}">
+                                        {{ application.resource.name }}
+                                    </a>
+                                    <small class="text-muted">
+                                        ({{ application.resource.resource_type|title }})
+                                    </small>
+                                </h5>
+                                
+                                <!-- Progress Bar -->
+                                {% set completed = application.todos|selectattr('status', 'equalto', 'completed')|list|length %}
+                                {% set total = application.todos|length %}
+                                {% set progress = (completed / total * 100)|round|int if total > 0 else 0 %}
+                                
+                                <div class="progress mb-2" style="height: 20px;">
+                                    <div class="progress-bar {% if progress == 100 %}bg-success{% endif %}" 
+                                         role="progressbar" 
+                                         style="width: {{ progress }}%"
+                                         aria-valuenow="{{ progress }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ progress }}%
+                                    </div>
+                                </div>
+
+                                <!-- Tasks -->
+                                <div class="tasks-list">
+                                    {% for todo in application.todos %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   {% if todo.status == 'completed' %}checked{% endif %}
+                                                   onchange="updateTodoStatus(this, '{{ todo.id }}')"
+                                                   id="todo-{{ todo.id }}">
+                                            <label class="form-check-label {% if todo.status == 'completed' %}text-muted{% endif %}" 
+                                                   for="todo-{{ todo.id }}">
+                                                {{ todo.task.name }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Deadline -->
+                                {% if application.resource.deadline %}
+                                    <div class="mt-2">
+                                        <small class="text-{% if application.resource.deadline < now %}danger{% else %}muted{% endif %}">
+                                            Deadline: {{ application.resource.deadline.strftime('%Y-%m-%d') }}
+                                        </small>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if not loop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p>You haven't starred any resources yet. 
+                           <a href="{{ url_for('resources.index') }}">Browse resources</a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Upcoming Deadlines -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Upcoming Deadlines</h5>
+                </div>
+                <div class="card-body">
+                    {% set upcoming = applications|selectattr('resource.deadline')|list %}
+                    {% if upcoming %}
+                        <ul class="list-unstyled">
+                            {% for app in upcoming|sort(attribute='resource.deadline') %}
+                                <li class="mb-2">
+                                    <strong>{{ app.resource.deadline.strftime('%Y-%m-%d') }}</strong>
+                                    <br>
+                                    {{ app.resource.name }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No upcoming deadlines</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">My Progress</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Resources Starred: {{ applications|length }}</li>
+                        {% set completed_tasks = 0 %}
+                        {% for app in applications %}
+                            {% for todo in app.todos %}
+                                {% if todo.status == 'completed' %}
+                                    {% set completed_tasks = completed_tasks + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        <li>Tasks Completed: {{ completed_tasks }}</li>
+                        <li>Applications Submitted: {{ applications|selectattr('status', 'equalto', 'submitted')|list|length }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for updating todo status -->
+<script>
+function updateTodoStatus(checkbox, todoId) {
+    fetch(`/todos/${todoId}/toggle`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const label = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                label.classList.add('text-muted');
+            } else {
+                label.classList.remove('text-muted');
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %} 
+
+File: 
+app/templates/main/index.html
+Content: 
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to College Access</h1>
+    <p class="lead">Find and track college opportunities, scholarships, and more.</p>
+    {% if not current_user.is_authenticated %}
+        <hr class="my-4">
+        <p>Get started by creating an account or logging in.</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}" role="button">Sign Up</a>
+        <a class="btn btn-secondary btn-lg" href="{{ url_for('auth.login') }}" role="button">Login</a>
+    {% endif %}
+</div>
+{% endblock %} 
+
+File: 
+app/templates/resources/import.html
+Content: 
+{% extends "base.html" %}
+
+{% block title %}Import Resources{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Import Resources</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Upload CSV File</h5>
+            
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="resource_type" class="form-label">Resource Type</label>
+                    <select class="form-select" id="resource_type" name="resource_type" required>
+                        <option value="">Select a type...</option>
+                        {% for type_key, type_config in config.RESOURCE_TYPES.items() %}
+                            <option value="{{ type_key }}">{{ type_config.display_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="file" class="form-label">CSV File</label>
+                    <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Required CSV Fields:</h6>
+                    <ul>
+                        <li>name (required)</li>
+                        <li>description</li>
+                        <li>deadline</li>
+                        <li>apply_link</li>
+                        <li>tags (comma-separated)</li>
+                        <li>type-specific fields (see documentation)</li>
+                    </ul>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Import Resources</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 
+
+File: 
+app/templates/resources/index.html
+Content: 
+{% extends "base.html" %}
+
+{% block title %}Resources{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Available Resources</h1>
+    
+    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+    <div class="mb-4">
+        <a href="{{ url_for('resources.import') }}" class="btn btn-success">
+            <i class="fas fa-file-import"></i> Import Resources
+        </a>
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        {% for resource in resources %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ resource.name }}</h5>
+                    <p class="card-text">{{ resource.description[:100] }}...</p>
+                    {% if resource.deadline %}
+                    <p class="card-text"><small class="text-muted">Deadline: {{ resource.deadline.strftime('%Y-%m-%d') }}</small></p>
+                    {% endif %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('resources.show', id=resource.id) }}" class="btn btn-primary">View Details</a>
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.has_starred(resource) %}
+                                <span class="text-warning"><i class="fas fa-star"></i> Starred</span>
+                            {% else %}
+                                <form action="{{ url_for('resources.star', id=resource.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-outline-warning">
+                                        <i class="far fa-star"></i> Star
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 
+
+File: 
+app/templates/resources/show.html
+Content: 
+{% extends "base.html" %}
+
+{% block title %}{{ resource.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{{ resource.name }}</h1>
+            
+            <div class="mb-3">
+                {% for tag in resource.tags %}
+                <span class="badge bg-secondary">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Details</h5>
+                    <p class="card-text">{{ resource.description }}</p>
+                    
+                    {% if resource.attributes %}
+                        {% for field_key, field_label in config.RESOURCE_TYPES[resource.resource_type].fields.items() %}
+                            {% if resource.attributes[field_key] %}
+                                <p class="card-text">
+                                    <strong>{{ field_label }}:</strong> 
+                                    {{ resource.attributes[field_key] }}
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% if resource.deadline %}
+                        <p class="card-text">
+                            <small class="text-muted">Deadline: {{ resource.deadline.strftime('%Y-%m-%d') }}</small>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if resource.tasks %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Required Tasks</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for task in resource.tasks %}
+                        <li class="list-group-item">
+                            <h6>{{ task.name }}</h6>
+                            <p>{{ task.description }}</p>
+                            {% if task.due_date %}
+                            <small class="text-muted">Due: {{ task.due_date.strftime('%Y-%m-%d') }}</small>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            {% if current_user.is_authenticated %}
+                {% if current_user.has_starred(resource) %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-star"></i> You have starred this resource
+                    </div>
+                {% else %}
+                    <form action="{{ url_for('resources.star', id=resource.id) }}" method="POST">
+                        <button type="submit" class="btn btn-warning btn-lg w-100">
+                            <i class="far fa-star"></i> Star This Resource
+                        </button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 
+
+File: 
+migrations/alembic.ini
+Content: 
+# A generic, single database configuration.
+
+[alembic]
+# template used to generate migration files
+# file_template = %%(rev)s_%%(slug)s
+
+# set to 'true' to run the environment during
+# the 'revision' command, regardless of autogenerate
+# revision_environment = false
+
+
+# Logging configuration
+[loggers]
+keys = root,sqlalchemy,alembic,flask_migrate
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARN
+handlers = console
+qualname =
+
+[logger_sqlalchemy]
+level = WARN
+handlers =
+qualname = sqlalchemy.engine
+
+[logger_alembic]
+level = INFO
+handlers =
+qualname = alembic
+
+[logger_flask_migrate]
+level = INFO
+handlers =
+qualname = flask_migrate
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(levelname)-5.5s [%(name)s] %(message)s
+datefmt = %H:%M:%S
+
+
+File: 
+migrations/env.py
+Content: 
+import logging
+from logging.config import fileConfig
+
+from flask import current_app
+
+from alembic import context
+
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
+config = context.config
+
+# Interpret the config file for Python logging.
+# This line sets up loggers basically.
+fileConfig(config.config_file_name)
+logger = logging.getLogger('alembic.env')
+
+
+def get_engine():
+    try:
+        # this works with Flask-SQLAlchemy<3 and Alchemical
+        return current_app.extensions['migrate'].db.get_engine()
+    except (TypeError, AttributeError):
+        # this works with Flask-SQLAlchemy>=3
+        return current_app.extensions['migrate'].db.engine
+
+
+def get_engine_url():
+    try:
+        return get_engine().url.render_as_string(hide_password=False).replace(
+            '%', '%%')
+    except AttributeError:
+        return str(get_engine().url).replace('%', '%%')
+
+
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
+config.set_main_option('sqlalchemy.url', get_engine_url())
+target_db = current_app.extensions['migrate'].db
+
+# other values from the config, defined by the needs of env.py,
+# can be acquired:
+# my_important_option = config.get_main_option("my_important_option")
+# ... etc.
+
+
+def get_metadata():
+    if hasattr(target_db, 'metadatas'):
+        return target_db.metadatas[None]
+    return target_db.metadata
+
+
+def run_migrations_offline():
+    """Run migrations in 'offline' mode.
+
+    This configures the context with just a URL
+    and not an Engine, though an Engine is acceptable
+    here as well.  By skipping the Engine creation
+    we don't even need a DBAPI to be available.
+
+    Calls to context.execute() here emit the given string to the
+    script output.
+
+    """
+    url = config.get_main_option("sqlalchemy.url")
+    context.configure(
+        url=url, target_metadata=get_metadata(), literal_binds=True
+    )
+
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+def run_migrations_online():
+    """Run migrations in 'online' mode.
+
+    In this scenario we need to create an Engine
+    and associate a connection with the context.
+
+    """
+
+    # this callback is used to prevent an auto-migration from being generated
+    # when there are no changes to the schema
+    # reference: http://alembic.zzzcomputing.com/en/latest/cookbook.html
+    def process_revision_directives(context, revision, directives):
+        if getattr(config.cmd_opts, 'autogenerate', False):
+            script = directives[0]
+            if script.upgrade_ops.is_empty():
+                directives[:] = []
+                logger.info('No changes in schema detected.')
+
+    conf_args = current_app.extensions['migrate'].configure_args
+    if conf_args.get("process_revision_directives") is None:
+        conf_args["process_revision_directives"] = process_revision_directives
+
+    connectable = get_engine()
+
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=get_metadata(),
+            **conf_args
+        )
+
+        with context.begin_transaction():
+            context.run_migrations()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()
+
+
+File: 
+migrations/script.py.mako
+Content: 
+"""${message}
+
+Revision ID: ${up_revision}
+Revises: ${down_revision | comma,n}
+Create Date: ${create_date}
+
+"""
+from alembic import op
+import sqlalchemy as sa
+${imports if imports else ""}
+
+# revision identifiers, used by Alembic.
+revision = ${repr(up_revision)}
+down_revision = ${repr(down_revision)}
+branch_labels = ${repr(branch_labels)}
+depends_on = ${repr(depends_on)}
+
+
+def upgrade():
+    ${upgrades if upgrades else "pass"}
+
+
+def downgrade():
+    ${downgrades if downgrades else "pass"}
+
+
+File: 
+migrations/versions
+Content: 
+empty directory
+
+File: 
+project_requrment.md
+Content: 
+Below is a sample **Project Requirements Document** that captures the major pieces of functionality and the data model you described, using **Python/Flask** with **SQLAlchemy** (and Supabase as the underlying database).
+
+---
+
+## 1. Project Overview
+
+The purpose of this web application is to provide college‐access support by allowing users to:
+1. View resources (such as scholarships, fly‐ins, and precollege programs).
+2. Mark resources of interest (“star” them) and track their progress toward applying to those resources.
+3. Read and post informational blog entries (for those with the Blogger role).
+4. Manage “tasks” and “to‐dos” that guide them through each resource’s application requirements.
+
+---
+
+## 2. Technology Stack
+
+1. **Backend**: Python (3.x) + Flask
+2. **Database**: Supabase (PostgreSQL under the hood), accessed via SQLAlchemy models.
+3. **ORM**: SQLAlchemy (with a migration tool such as Alembic recommended)
+4. **Front End**: Could be Flask templates (Jinja2), or a separate frontend that interacts via REST API endpoints in Flask.
+5. **Deployment**: Supabase for hosting the DB, and any hosting platform (AWS, Heroku, etc.) for the Flask application (details can vary).
+
+---
+
+## 3. User & Authentication Requirements
+
+1. **User Accounts**  
+   - Must be able to create a new user account (username/email/password) and log in.
+   - Passwords should be hashed and salted (e.g. using a library like `bcrypt` or `werkzeug.security` in Flask).
+
+2. **Roles**  
+   - **User**: the standard user who can view resources, apply to them (i.e., star or designate interest), and track tasks.
+   - **Blogger**: a subset of users who have permission to create, update, and delete blog posts that all other users can read.
+
+3. **Authorization**  
+   - Only users with the Blogger role can manage blog posts (create/edit/delete).
+   - All users (including Bloggers) can view resources, star them, and manage tasks on their own applications.
+
+---
+
+## 4. Resource & Tag Requirements
+
+1. **Resource**  
+   - Each Resource represents some kind of opportunity: scholarships, fly‐ins, precollege programs, etc.
+   - Data fields might include:
+     - `id` (primary key)  
+     - `name` (string)  
+     - `description` (text)  
+     - `category` or `type` (optional if you decide to store in tags only)  
+     - `deadline` or other relevant dates  
+   - Resources can be **bulk‐loaded** from a CSV file (e.g., an admin or script can read CSV rows and create Resource objects in the database).
+
+2. **Tags**  
+   - A Resource can have multiple Tags. For example, a Resource might have tags like “STEM,” “Women,” “Low Income,” etc.
+   - Use an **association table** (`resource_tags`) to represent the **many‐to‐many** relationship:
+     - `resource_tags`:
+       - `id` (primary key)  
+       - `resource_id` (foreign key to `Resource.id`)  
+       - `tag_id` (foreign key to `Tag.id`)
+
+3. **Tag**  
+   - Data fields might include:
+     - `id` (primary key)  
+     - `name` (string, e.g. “STEM,” “Business,” “First‐Gen,” etc.)
+
+---
+
+## 5. Task & Form Requirements
+
+1. **Task**  
+   - Each Resource can have one or more **Tasks**, describing the steps needed to successfully complete or obtain that Resource.
+   - Data fields:
+     - `id` (primary key)  
+     - `resource_id` (foreign key to `Resource.id`)  
+     - `name` or `title` (string)  
+     - `description` (text)  
+     - `due_date` (date/datetime) if applicable
+   - Examples of tasks:
+     - “Submit personal statement by X date”  
+     - “Gather recommendation letters”  
+
+2. **Form** (Optional / As needed)  
+   - If your Resource requires custom forms (e.g., questions that the user must fill out), you might have a **Form** model.
+   - Data fields:
+     - `id` (primary key)  
+     - `task_id` or `resource_id` (depends on design, foreign key)  
+     - `form_fields` (JSON or text representation of questions)  
+   - Alternatively, you can store the actual question–answer pairs in a separate table, or just keep them in a `Todo` or `Answers` table.  
+
+---
+
+## 6. Application & Todo Requirements
+
+### 6.1 Application
+
+1. **Application** is an **association object** between `User` and `Resource`.
+   - When a user “stars” or otherwise designates interest in a Resource, an **Application** object is created.
+2. Schema example:
+   ```sql
+   Application:
+   - id (primary key)
+   - user_id (foreign key to User.id)
+   - resource_id (foreign key to Resource.id)
+   - status (string or enum: e.g. "in_progress", "submitted", "accepted", "rejected")
+   - created_at, updated_at (timestamps)
+   ```
+3. **Behavior**:
+   - A single user may create multiple Applications if they are interested in multiple Resources.
+   - The user can track the progress/status of each Application individually.
+
+### 6.2 Todo
+
+1. **Todo** items are child objects of **Application** that represent the user’s personal tasks for that Resource.
+   - Each Resource’s Task objects will “spawn” corresponding Todos for the user once they create an Application.
+2. Schema example:
+   ```sql
+   Todo:
+   - id (primary key)
+   - application_id (foreign key to Application.id)
+   - task_id (foreign key to Task.id)
+   - status (string or boolean: e.g. "not_started", "in_progress", "completed")
+   - user_notes (text)  # optional field
+   - due_date (may inherit from the Task, or be copied)
+   ```
+3. **Behavior**:
+   - When a user creates a new Application for a Resource, automatically generate corresponding Todos for each Task that Resource defines.
+   - The user can mark each Todo as completed, add personal notes, etc.
+
+---
+
+## 7. Blogging Requirements
+
+1. **Blog** (Posts)
+   - A `BlogPost` model or similar, with fields like:
+     - `id` (primary key)  
+     - `title` (string)  
+     - `content` (text)  
+     - `created_at` (datetime)  
+     - `author_id` (foreign key to `User.id`)
+2. **Behavior**:
+   - Only users with the Blogger role can create, edit, or delete `BlogPost` objects.
+   - All users can read blog posts.
+
+---
+
+## 8. Data Model (SQLAlchemy Sketch)
+
+Here is a rough outline for the SQLAlchemy models. (In practice, you will have each model in its own file or the same file with separate classes.)
+
+```python
+from sqlalchemy import (
+    Column, Integer, String, Text, DateTime, Boolean, ForeignKey, Table
+)
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from your_database_setup import Base  # or declarative_base()
+
+# Many-to-many for Resource <-> Tag
+resource_tags = Table(
+    'resource_tags', Base.metadata,
+    Column('id', Integer, primary_key=True),  # If desired, or omit & use composite PK
+    Column('resource_id', Integer, ForeignKey('resources.id')),
+    Column('tag_id', Integer, ForeignKey('tags.id'))
+)
+
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+    role = Column(String, default="user")  # "user" or "blogger"
+
+    # Relationship to Application
+    applications = relationship("Application", back_populates="user")
+
+class Resource(Base):
+    __tablename__ = 'resources'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    description = Column(Text)
+    # other fields as necessary
+
+    # Many to many with Tag
+    tags = relationship(
+        "Tag",
+        secondary=resource_tags,
+        back_populates="resources"
+    )
+
+    # One to many with Task
+    tasks = relationship("Task", back_populates="resource")
+
+    # Relationship to Application
+    applications = relationship("Application", back_populates="resource")
+
+class Tag(Base):
+    __tablename__ = 'tags'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, nullable=False)
+
+    # Link back to Resource
+    resources = relationship(
+        "Resource",
+        secondary=resource_tags,
+        back_populates="tags"
+    )
+
+class Task(Base):
+    __tablename__ = 'tasks'
+    id = Column(Integer, primary_key=True)
+    resource_id = Column(Integer, ForeignKey('resources.id'), nullable=False)
+    name = Column(String, nullable=False)
+    description = Column(Text)
+    due_date = Column(DateTime)
+
+    # Link back to Resource
+    resource = relationship("Resource", back_populates="tasks")
+
+    # Relationship to Todo
+    todos = relationship("Todo", back_populates="task")
+
+class Application(Base):
+    __tablename__ = 'applications'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    resource_id = Column(Integer, ForeignKey('resources.id'), nullable=False)
+    status = Column(String, default="in_progress")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Link to user
+    user = relationship("User", back_populates="applications")
+
+    # Link to resource
+    resource = relationship("Resource", back_populates="applications")
+
+    # One to many to Todo
+    todos = relationship("Todo", back_populates="application")
+
+class Todo(Base):
+    __tablename__ = 'todos'
+    id = Column(Integer, primary_key=True)
+    application_id = Column(Integer, ForeignKey('applications.id'), nullable=False)
+    task_id = Column(Integer, ForeignKey('tasks.id'), nullable=False)
+    status = Column(String, default="not_started")
+    user_notes = Column(Text)
+    due_date = Column(DateTime)
+
+    # Link back to application
+    application = relationship("Application", back_populates="todos")
+    # Link to task
+    task = relationship("Task", back_populates="todos")
+
+class BlogPost(Base):
+    __tablename__ = 'blog_posts'
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    author_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+
+    # Link to user
+    author = relationship("User")
+```
+
+---
+
+## 9. API Endpoints (Illustrative)
+
+Below is a very high‐level outline; in a real app, you would flesh out each endpoint with authentication checks, JSON responses, error handling, etc.
+
+1. **Auth Routes**  
+   - `POST /login`  
+   - `POST /logout`  
+   - `POST /register`
+
+2. **User / Blogger**  
+   - `GET /blog` (list blog posts)  
+   - `POST /blog` (create new post) – restricted to Blogger role  
+   - `PUT /blog/<post_id>` (edit post) – restricted to author  
+   - `DELETE /blog/<post_id>` – restricted to author
+
+3. **Resources**  
+   - `GET /resources` (list all resources)  
+   - `GET /resources/<id>` (view a single resource, tasks, tags, etc.)  
+   - (Admin routes for bulk‐upload from CSV can be hidden behind admin privileges if necessary)
+
+4. **Applications**  
+   - `POST /applications` (create an application by “starring” a resource)  
+   - `GET /applications` (view all applications belonging to the current user)  
+   - `GET /applications/<id>` (view the details of one application, including todos)  
+   - `PUT /applications/<id>` (update the status, etc.)
+
+5. **Todos**  
+   - `PUT /todos/<id>` (mark as complete, add notes, etc.)
+
+---
+
+## 10. CSV Import Requirement
+
+1. **CSV Format**  
+   - The CSV might have columns for: `name`, `description`, `deadline`, `tags`, etc.
+2. **Import Flow**  
+   - An admin route or script reads each row, creates a new `Resource`, then processes the comma‐separated `tags` column to create new `Tag` objects (or link existing ones).
+   - Imported resources become immediately visible in the “Resources” page.
+
+---
+
+## 11. Security & Validation
+
+1. **User Authentication** must protect the routes for creating an Application, tasks, and blog posts (for Bloggers).
+2. **Role Checking**: only Blogger role can manage Blog content.
+3. **Data Validation**:  
+   - Ensure date fields for tasks are in valid date range.  
+   - Avoid duplicate resource entries on CSV import.
+
+---
+
+## 12. Summary & Next Steps
+
+This requirement document outlines:
+- **Entities**: User, Resource, Tag, Task, Application, Todo, BlogPost.  
+- **Relationships**:  
+  - **User** ↔ **Application** ↔ **Resource** (many‐to‐many via the Application association).  
+  - **Resource** ↔ **Tag** (many‐to‐many).  
+  - **Resource** ↔ **Task** (one‐to‐many).  
+  - **Application** ↔ **Todo** (one‐to‐many) which references **Task**.  
+  - **User** with role Blogger can create **BlogPosts**.
+- **Core Features**: CSV loading for resources, user “starring” of resources, dynamic tasks → todos creation, and blog functionality.
+
+**Next Steps**:
+- Set up Flask routes for each resource and perform CRUD operations.
+- Implement user authentication (e.g., Flask-Login or custom JWT solution).
+- Write the migration scripts (Alembic).
+- Implement a front-end user experience that displays resources, tasks, and allows marking them complete.
+
+By following this outline, you have a clear blueprint for the data model, RESTful routes, and functionality needed to build out your **college access web application** with Python, Flask, and Supabase.
+
+File: 
+requirements.txt
+Content: 
+Flask==3.0.2
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Flask-Migrate==4.1.0
+python-dotenv==1.0.1
+psycopg2-binary==2.9.10
+werkzeug==3.0.1
+email-validator==2.1.0.post1
+python-jose==3.3.0 
+
+aiohappyeyeballs==2.4.4
+aiohttp==3.11.11
+aiosignal==1.3.2
+alembic==1.14.0
+aniso8601==10.0.0
+annotated-types==0.7.0
+anyio==4.8.0
+attrs==24.3.0
+babel==2.16.0
+blinker==1.9.0
+certifi==2024.12.14
+click==8.1.8
+colorama==0.4.6
+deprecation==2.1.0
+dnspython==2.7.0
+email_validator==2.2.0
+Flask==3.1.0
+Flask-Login==0.6.3
+Flask-Mail==0.10.0
+Flask-Markdown==0.3
+Flask-Migrate==4.1.0
+Flask-Moment==1.0.6
+Flask-Principal==0.4.0
+Flask-RESTful==0.3.10
+Flask-SQLAlchemy==3.1.1
+Flask-Testing==0.8.1
+Flask-WTF==1.2.2
+frozenlist==1.5.0
+gotrue==2.11.1
+greenlet==3.1.1
+h11==0.14.0
+h2==4.1.0
+hpack==4.0.0
+httpcore==1.0.7
+httpx==0.27.2
+humanize==4.11.0
+hyperframe==6.0.1
+idna==3.10
+itsdangerous==2.2.0
+Jinja2==3.1.5
+Mako==1.3.8
+Markdown==3.7
+MarkupSafe==3.0.2
+multidict==6.1.0
+packaging==24.2
+postgrest==0.19.1
+propcache==0.2.1
+psycopg2-binary==2.9.10
+pydantic==2.10.5
+pydantic_core==2.27.2
+python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
+python-slugify==8.0.4
+pytz==2024.2
+realtime==2.1.0
+six==1.17.0
+sniffio==1.3.1
+SQLAlchemy==2.0.37
+storage3==0.11.0
+StrEnum==0.4.15
+supabase==2.11.0
+supafunc==0.9.0
+text-unidecode==1.3
+typing_extensions==4.12.2
+websockets==13.1
+Werkzeug==3.1.3
+WTForms==3.2.1
+WTForms-SQLAlchemy==0.4.2
+yarl==1.18.3
+
+
+File: 
+run.py
+Content: 
+from app import create_app
+
+app = create_app()
+
+if __name__ == '__main__':
+    app.run(debug=True) 
+
