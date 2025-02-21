@@ -6,6 +6,7 @@ from .application import Application
 from .todo import Todo
 from .blog_post import BlogPost
 from .blog_category import BlogCategory
+from .user import Role, roles_users
 
 # This allows us to import all models from app.models
 __all__ = [
@@ -17,5 +18,7 @@ __all__ = [
     'Todo',
     'BlogPost',
     'BlogCategory',
-    'resource_tags'
+    'resource_tags',
+    'Role',
+    'roles_users'
 ] 

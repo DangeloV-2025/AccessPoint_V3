@@ -11,9 +11,10 @@ def load_user(id):
     return User.query.get(str(id))
 
 
+# Association table for User and Role
 roles_users = db.Table(
     'roles_users',
-    db.Column('user_id', db.UUID(as_uuid=True), db.ForeignKey('users.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True),
+    db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('users.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True),
     db.Column('role_id', db.Integer, db.ForeignKey('role.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
 )
 
@@ -86,8 +87,9 @@ class User(UserMixin, db.Model):
 
     @property
     def is_admin(self):
-        """Check if user has admin role"""
-        return self.has_role("admin")
+        """Check if user has admin role or is in ADMIN_EMAILS"""
+        from flask import current_app
+        return self.has_role("admin") or self.email in current_app.config['ADMIN_EMAILS']
 
     
 
@@ -110,8 +112,3 @@ class User(UserMixin, db.Model):
             user_id=self.id, 
             resource_id=resource.id
         ).first() is not None 
-    
-    @property
-    def is_admin(self):
-        from flask import current_app
-        return self.email in current_app.config['ADMIN_EMAILS']

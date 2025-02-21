@@ -1,13 +1,17 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from app.models import Application
+from app.models import Application, BlogPost
 from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    return render_template('main/index.html')
+    recent_posts = BlogPost.query.filter_by(status='published')\
+        .order_by(BlogPost.published_at.desc())\
+        .limit(2)\
+        .all()
+    return render_template('main/index.html', recent_posts=recent_posts)
 
 @main_bp.route('/dashboard')
 @login_required

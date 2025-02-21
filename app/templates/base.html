@@ -3,25 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>College Access - {% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %} - College Access</title>
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --light-blue: #caf0f8;
+            --medium-blue: #00b4d8;
+            --dark-blue: #0077b6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: var(--dark-blue) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--light-blue) !important;
+        }
+
+        .nav-link {
+            color: white !important;
+            transition: transform 0.2s ease;
+            padding: 8px 16px;
+        }
+
+        .nav-link:hover {
+            transform: scale(1.05);
+        }
+
+        .admin-nav .nav-link {
+            color: var(--dark-blue) !important; /* Set the text color to dark blue */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--light-gray); /* Set a background color */
+            transition: transform 0.2s; /* Smooth transition for the hover effect */
+        }
+
+        .admin-nav .nav-link:hover,
+        .admin-nav .nav-link.active {
+            background-color: var(--light-blue); /* Change background on hover */
+            transform: scale(1.05); /* Slightly increase size on hover */
+        }
+
+        .admin-button-box {
+            background-color: white;
+            border-radius: 5px;
+            margin-left: 10px;
+            transition: transform 0.2s;
+        }
+
+        .admin-button-box:hover {
+            transform: scale(1.05);
+        }
+
+        .admin-button-box .nav-link {
+            color: var(--dark-blue) !important;
+            font-weight: 600;
+        }
+
+        .navbar-nav {
+            align-items: center;
+        }
+
+        .admin-box {
+            background-color: white; /* White background */
+            border: 2px solid var(--light-blue); /* Light blue border */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px; /* Padding inside the box */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            margin: 20px; /* Margin around the box */
+        }
+
+        .btn-primary {
+            background-color: var(--medium-blue);
+            border-color: var(--medium-blue);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+            border-color: var(--dark-blue);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            color: var(--dark-blue);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--medium-blue);
+        }
+
+        /* Animation classes */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Add this to your existing styles */
+        .mascot-image {
+            width: 50%;
+            border: 8px solid white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-left: 250px;
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     {% include 'includes/navbar.html' %}
 
-    <div class="container mt-4">
+    <main class="{% block main_class %}py-4{% endblock %}">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
+                <div class="container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
         {% endwith %}
-        
-        {% block content %}{% endblock %}
-    </div>
 
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+
+        // Initialize fade-up animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html> 

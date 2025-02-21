@@ -7,8 +7,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <!-- Existing Nav Links -->
+            <ul class="navbar-nav me-auto align-items-center">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('resources.index') }}">Resources</a>
                 </li>
@@ -20,22 +19,17 @@
                         <a class="nav-link" href="{{ url_for('main.dashboard') }}">My Dashboard</a>
                     </li>
                     {% if current_user.is_admin %}
-                        <li class="nav-item">
+                        <li class="admin-button-box">
                             <a class="nav-link" href="{{ url_for('admin.admin_dashboard') }}">Admin Dashboard</a>
                         </li>
                     {% endif %}
                 {% endif %}
             </ul>
 
-            <!-- Admin Status -->
-            <div class="ms-3">
-                <span class="navbar-text text-white border px-3 py-1 rounded bg-danger">
-                    Admin: {% if current_user.is_authenticated and current_user.is_admin %} True {% else %} False {% endif %}
-                </span>
-            </div>
+        
             
             <!-- Right side nav for Login/Logout -->
-            <ul class="navbar-nav">
+            <ul class="navbar-nav align-items-center">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>

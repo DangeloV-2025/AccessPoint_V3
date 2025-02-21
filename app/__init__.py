@@ -25,12 +25,14 @@ def create_app(config_class=Config):
     from app.routes.resources import resources_bp
     from app.routes.applications import applications_bp
     from app.routes.blog import blog_bp
+    from app.routes.admin import admin_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(resources_bp)
     app.register_blueprint(applications_bp)
     app.register_blueprint(blog_bp)
+    app.register_blueprint(admin_bp)
 
     # Ensure admin users exist after initializing app context
     with app.app_context():

@@ -10,14 +10,16 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SUPABASE_URL = os.environ.get('SUPABASE_URL')
     SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY')
+    SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_KEY')
     
 
-    # Add this new config value
+    # Update ADMIN_EMAILS handling
     ADMIN_EMAILS = [
-        email.strip()
-        for email in os.environ.get("ADMIN_EMAILS", "").split(",")
-        if email.strip()
+        email.strip() 
+        for email in os.environ.get("ADMIN_EMAILS", "").split(",") 
+        if email.strip() != ""
     ]
+    print(f"Loaded admin emails: {ADMIN_EMAILS}")  # Debug print
     
     
 

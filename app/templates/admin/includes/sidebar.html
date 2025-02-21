@@ -1,0 +1,22 @@
+<div class="card">
+    <div class="card-body">
+        <nav class="admin-nav">
+            <a href="{{ url_for('admin.admin_dashboard') }}" 
+               class="nav-link {% if request.endpoint == 'admin.admin_dashboard' %}active{% endif %}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin.manage_users') }}" 
+               class="nav-link {% if request.endpoint == 'admin.manage_users' %}active{% endif %}">
+                <i class="fas fa-users"></i> Users
+            </a>
+            <a href="{{ url_for('admin.manage_resources') }}" 
+               class="nav-link {% if request.endpoint == 'admin.manage_resources' %}active{% endif %}">
+                <i class="fas fa-book"></i> Resources
+            </a>
+            <a href="{{ url_for('admin.manage_blogs') }}" 
+               class="nav-link {% if request.endpoint == 'admin.manage_blogs' %}active{% endif %}">
+                <i class="fas fa-blog"></i> Blog Posts
+            </a>
+        </nav>
+    </div>
+</div> 

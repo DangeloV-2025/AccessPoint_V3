@@ -6,13 +6,16 @@ import csv
 from io import StringIO
 from datetime import datetime
 from flask import current_app
+from app.utils.decorators import admin_required
 
 resources_bp = Blueprint('resources', __name__)
 
 @resources_bp.route('/resources')
 def index():
     resources = Resource.query.all()
-    return render_template('resources/index.html', resources=resources)
+    return render_template('resources/index.html', 
+                         resources=resources,
+                         now=datetime.utcnow())
 
 @resources_bp.route('/resources/<int:id>')
 def show(id):
@@ -107,35 +110,23 @@ def process_csv(file_content, resource_type):
 
 @resources_bp.route('/resources/import', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def import_resources():
     if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file uploaded', 'error')
-            return redirect(request.url)
-        
-        file = request.files['file']
         resource_type = request.form.get('resource_type')
-        
-        if file.filename == '':
-            flash('No file selected', 'error')
-            return redirect(request.url)
-        
-        if not resource_type:
-            flash('Resource type is required', 'error')
-            return redirect(request.url)
+        file = request.files.get('file')
         
         if file and file.filename.endswith('.csv'):
             result = process_csv(file.read(), resource_type)
             if result:
                 flash(f'Successfully imported {result} resources', 'success')
-            return redirect(url_for('resources.index'))
-        
-        
+            return redirect(url_for('admin.manage_resources'))
         
         flash('Invalid file type. Please upload a CSV file.', 'error')
-        return redirect(request.url)
+        return redirect(url_for('admin.manage_resources'))
     
-    return render_template('resources/import.html')
+    flash('Invalid request method', 'error')
+    return redirect(url_for('admin.manage_resources'))
 
 @resources_bp.route('/todos/<int:id>/toggle', methods=['POST'])
 @login_required

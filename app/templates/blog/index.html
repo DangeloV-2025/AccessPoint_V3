@@ -1,65 +1,170 @@
 {% extends "base.html" %}
 
-{% block title %}Blog Posts{% endblock %}
+{% block title %}Blog{% endblock %}
+
+{% block extra_css %}
+<style>
+    .blog-header {
+        background: linear-gradient(135deg, var(--dark-blue), var(--medium-blue));
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+    }
+
+    .category-badge {
+        background-color: var(--light-blue);
+        color: var(--dark-blue);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .category-badge:hover {
+        background-color: var(--medium-blue);
+        color: white;
+    }
+
+    .blog-card {
+        overflow: hidden;
+    }
+
+    .blog-card .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .blog-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .blog-meta {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .category-sidebar .active {
+        background-color: var(--light-blue);
+        color: var(--dark-blue);
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <!-- Main Content -->
-        <div class="col-md-8">
-            <h1 class="mb-4">Blog Posts</h1>
-            
+<!-- Blog Header -->
+<div class="blog-header text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-3">College Access Blog</h1>
+                <p class="lead mb-0">Expert advice, tips, and insights for your college journey</p>
+            </div>
             {% if current_user.is_blogger() %}
-            <div class="mb-4">
-                <a href="{{ url_for('blog.new') }}" class="btn btn-primary">
+            <div class="col-md-4 text-md-end" data-aos="fade-left">
+                <a href="{{ url_for('blog.new') }}" class="btn btn-light btn-lg">
                     <i class="fas fa-plus"></i> New Post
                 </a>
             </div>
             {% endif %}
-            
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
             {% if posts %}
-                {% for post in posts %}
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h2 class="card-title h4">
-                            <a href="{{ url_for('blog.show', id=post.id) }}" class="text-decoration-none">
-                                {{ post.title }}
-                            </a>
-                        </h2>
-                        {% if post.category %}
-                            <span class="badge bg-secondary">{{ post.category.name }}</span>
-                        {% endif %}
-                        <p class="card-text text-muted small">
-                            By {{ post.author.username }} on {{ post.published_at.strftime('%B %d, %Y') }}
-                        </p>
-                        <p class="card-text">{{ post.content[:200] }}...</p>
-                        <a href="{{ url_for('blog.show', id=post.id) }}" class="btn btn-sm btn-outline-primary">
-                            Read More
-                        </a>
+                <div class="row g-4">
+                    {% for post in posts %}
+                    <div class="col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                        <article class="card h-100 blog-card">
+                            {% if post.image_url %}
+                            <img src="{{ post.image_url }}" class="card-img-top" alt="{{ post.title }}">
+                            {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-newspaper fa-3x text-muted"></i>
+                            </div>
+                            {% endif %}
+                            <div class="card-body">
+                                {% if post.category %}
+                                <a href="{{ url_for('blog.category', slug=post.category.slug) }}" 
+                                   class="text-decoration-none">
+                                    <span class="category-badge mb-2 d-inline-block">
+                                        {{ post.category.name }}
+                                    </span>
+                                </a>
+                                {% endif %}
+                                <h2 class="h5 card-title">
+                                    <a href="{{ url_for('blog.show', id=post.id) }}" 
+                                       class="text-decoration-none text-dark">
+                                        {{ post.title }}
+                                    </a>
+                                </h2>
+                                <p class="card-text text-muted">{{ post.content[:150] }}...</p>
+                                <div class="blog-meta d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <i class="fas fa-user-circle"></i>
+                                        {{ post.author.email }}
+                                    </span>
+                                    <span>
+                                        <i class="far fa-calendar-alt"></i>
+                                        {{ post.published_at.strftime('%B %d, %Y') }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white border-0">
+                                <a href="{{ url_for('blog.show', id=post.id) }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    Read More
+                                </a>
+                            </div>
+                        </article>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             {% else %}
-                <p>No posts found.</p>
+                <div class="text-center py-5">
+                    <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                    <h3>No Posts Yet</h3>
+                    <p class="text-muted">Check back soon for new content!</p>
+                </div>
             {% endif %}
         </div>
-        
+
         <!-- Sidebar -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Categories</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        {% for category in categories %}
-                        <li class="mb-2">
-                            <a href="{{ url_for('blog.category', slug=category.slug) }}" class="text-decoration-none">
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 2rem;">
+                <!-- Categories -->
+                <div class="card mb-4 category-sidebar">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Categories</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <a href="{{ url_for('blog.index') }}" 
+                               class="list-group-item list-group-item-action border-0 
+                                      {% if not current_category %}active{% endif %}">
+                                All Posts
+                            </a>
+                            {% for category in categories %}
+                            <a href="{{ url_for('blog.category', slug=category.slug) }}" 
+                               class="list-group-item list-group-item-action border-0
+                                      {% if current_category and current_category.id == category.id %}active{% endif %}">
                                 {{ category.name }}
                             </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Blog -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">About Our Blog</h5>
+                        <p class="card-text">Stay informed with the latest college admissions tips, scholarship opportunities, and expert advice to help you succeed in your college journey.</p>
+                    </div>
                 </div>
             </div>
         </div>
