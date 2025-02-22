@@ -3,12 +3,13 @@ from flask_login import login_required, current_user
 from app.models import BlogPost, User, BlogCategory
 from app import db
 from datetime import datetime
+from app.utils.decorators import blogger_required
 
 blog_bp = Blueprint('blog', __name__)
 
 @blog_bp.route('/blog')
 def index():
-    """Show all published blog posts"""
+    """Show all published blog posts - accessible to all users"""
     posts = BlogPost.query.filter_by(status='published')\
         .order_by(BlogPost.published_at.desc()).all()
     categories = BlogCategory.query.all()
@@ -17,9 +18,8 @@ def index():
 @blog_bp.route('/blog/new', methods=['GET', 'POST'])
 @login_required
 def new():
-    print(f"Current user: {current_user}")
-    """Create new blog post (bloggers only)"""
-    if not current_user.is_blogger():
+    """Create new blog post (bloggers and admins only)"""
+    if not (current_user.is_blogger() or current_user.is_admin):
         flash('You do not have permission to create blog posts.', 'error')
         return redirect(url_for('blog.index'))
     
@@ -27,10 +27,10 @@ def new():
         post = BlogPost(
             title=request.form['title'],
             content=request.form['content'],
-            author=current_user
+            author=current_user,
+            status='published',
+            published_at=datetime.utcnow()
         )
-        if 'publish' in request.form:
-            post.publish()
         
         db.session.add(post)
         db.session.commit()
@@ -42,9 +42,10 @@ def new():
 
 @blog_bp.route('/blog/<int:id>')
 def show(id):
-    """Show a specific blog post"""
+    """Show a specific blog post - accessible to all users"""
     post = BlogPost.query.get_or_404(id)
-    if post.status != 'published' and (not current_user.is_authenticated or post.author != current_user):
+    if post.status != 'published' and (not current_user.is_authenticated or 
+                                     not (current_user.is_admin or current_user == post.author)):
         flash('This post is not available.', 'error')
         return redirect(url_for('blog.index'))
     return render_template('blog/show.html', post=post)
@@ -52,18 +53,15 @@ def show(id):
 @blog_bp.route('/blog/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit(id):
-    """Edit a blog post (author only)"""
+    """Edit a blog post (author and admins only)"""
     post = BlogPost.query.get_or_404(id)
-    if post.author != current_user:
+    if not (current_user.is_admin or current_user == post.author):
         flash('You do not have permission to edit this post.', 'error')
         return redirect(url_for('blog.show', id=id))
     
     if request.method == 'POST':
         post.title = request.form['title']
         post.content = request.form['content']
-        if 'publish' in request.form and post.status != 'published':
-            post.publish()
-        
         db.session.commit()
         flash('Blog post updated successfully!', 'success')
         return redirect(url_for('blog.show', id=post.id))

@@ -95,7 +95,7 @@ class User(UserMixin, db.Model):
 
     def is_blogger(self):
         """Check if user has blogger role"""
-        return self.has_role("blogger")
+        return self.has_role("blogger") or self.is_admin
 
     def star_resource(self, resource):
         """Helper method to create an application (star) for a resource"""

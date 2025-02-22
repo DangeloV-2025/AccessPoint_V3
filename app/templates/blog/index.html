@@ -60,7 +60,7 @@
                 <h1 class="display-4 fw-bold mb-3">College Access Blog</h1>
                 <p class="lead mb-0">Expert advice, tips, and insights for your college journey</p>
             </div>
-            
+            {% if current_user.is_authenticated and (current_user.is_blogger() or current_user.is_admin) %}
             <div class="col-md-4 text-md-end" data-aos="fade-left">
                 <a href="{{ url_for('blog.new') }}" class="btn btn-light btn-lg">
                     <i class="fas fa-plus"></i> New Post
