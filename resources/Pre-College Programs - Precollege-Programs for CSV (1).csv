@@ -1,0 +1,53 @@
+id,organization,name,apply_link,deadline,grade_eligibility
+1,Questbridge,College Prep Scholars,college-prep-scholars,"March 20, 2025",11
+2,LEDA,Leadership Enterprise for a Diverse America (LEDA),https://ledascholars.org/,"December 11, 2024",11
+3,Thrive,Thrive Scholars 6 Year Program,https://www.thrivescholars.org,"December 15, 2024",11
+4,MIT,Women's Technology Program (WTP),https://web.mit.edu/wtp/,"January 15, 2025",11
+5,Thrive,Thrive OnRamp,https://apply.thrivescholars.org/onramp,"December 15, 2024",10
+6,USC Bovard,Bovard Scholars,https://bovardscholars.usc.edu/,"January 17, 2025",11
+7,Matriculate,Matriculate High School Fellows,https://matriculate.org/,Opens February 2025,"11, 12"
+8,MITES,"MIT Intro to Tech, Engineering, and Science",https://mites.mit.edu/,"February 1, 2025",11
+9,Alexander Hamilton Scholars,Hamilton Scholars,https://www.hamiltonscholars.org/,"January 31, 2025",11
+10,Carnegie Melon University,Carnegie Mellon's Pre-College Programs,https://www.cmu.edu/pre-college/index.html,"March 1, 2025","10, 11"
+11,Carnegie Melon University,Summer Academy for Math and Science (SAMS),https://www.cmu.edu/pre-college/academic-programs/sams.html,"March 1,2025",11
+12,Kettering University AIM,Academically Interested Minds (AIM),https://www.kettering.edu/academics/precollege/AIM,NaN,12
+13,Hispanic Scholarship Fund,HSF Scholar Program,https://www.hsf.net/,"February 15, 2025",11
+14,Arizona State University,Barrett Summer Scholars (BSS), https://eoss.asu.edu/bss,"March 24, 2024",Rising 8 - 11
+15,Brown Pre-college Programs,Brown Pre-college Programs,https://precollege.brown.edu/?utm_source=google&utm_medium=cpc,"May 9, 2025",9 - 12
+16,Washington University in St. Louis,Washington University Pre-college Programs,https://precollege.wustl.edu/,"April 1, 2025","10, 11"
+17,Stanford University,Stanford Math Circle,https://mathcircle.spcs.stanford.edu/,NaN,9 - 12
+18,Vanderbilt University,Mentor Immersion at Vanderbilt Program for Talented Youth,https://pty.vanderbilt.edu/,Rolling,10 - 12
+19,Stanford University,Stanford Pre-collegiate Summer Institutes,https://spcs.stanford.edu/,"March 20, 2025",8 - 11
+20,University of Chicago,Uchicago Summer Immersion Sessions,https://summer.uchicago.edu/pre-college/pre-college/3-week-immersion/,"March 5, 2025",9 - 11
+21,Brown Pre-college Programs,Brown Environmental Leadership Labs (BELL),https://precollege.brown.edu/programs/bell-program,"March 31, 2025",10 - 12
+22,Yale University,Yale Young Global Scholars (YYGS),https://globalscholars.yale.edu/,"January 10, 2025",10 - 11
+23,Arizona State University,Cesar E. Chavez Institute Leadership Institute (CCLI),https://eoss.asu.edu/access/cesar-e-chavez-leadership-institute,NaN,"10, 11"
+24,Stanford University,Stanford University Mathematics Camp (SUMaC),https://sumac.spcs.stanford.edu/,"February 3, 2025","10, 11"
+25,Vanderbilt University,Vanderbilt Summer Academy ,https://pty.vanderbilt.edu/vsa-2025-courses/,Rolling,9 - 12
+26,Stanford University,Stanford Summer Humanities Institute (SSHI),https://spcs.stanford.edu/programs/stanford-summer-humanities-institute,"February 3, 2025",10 - 11
+27,Harvard University ,Harvard's Pre-college Program,https://summer.harvard.edu/high-school-programs/pre-college-program/#what-is-a-pre-college-program,"February 12, 2025",10 - 11
+28,Boston University ,High School Honors,https://www.bu.edu/summer/high-school-programs/high-school-honors/,"May 23, 2025",10 - 11
+29,Boston University ,RISE Internship/Practicum,https://www.bu.edu/summer/high-school-programs/rise-internship-practicum/,"February 14, 2025",11
+30,Boston University ,Academic Immersion,https://www.bu.edu/summer/high-school-programs/academic-immersion/,Rolling,10 - 11
+31,Brown Pre-college Programs,Leadership Institute,https://precollege.brown.edu/programs/leadership-institute,Rolling,9 - 12
+32,Brown Pre-college Programs,Brown Experiential Education,https://precollege.brown.edu/programs/brown-experiential-education-bee,"May 9, 2025",10 - 12
+33,Tufts University,Pre-College Programs at Tufts,https://universitycollege.tufts.edu/pre-college,"May 1, 2025",9 - 12
+34,Posse,Posse Foundation,https://www.possefoundation.org/,NaN,12
+35,Jack Kent Cooke Foundation,JKC Young Scholars,https://www.jkcf.org/our-scholarships/young-scholars-program/,"April 30, 2025",7
+36,Columbia Climate School,Columbia Climate School in the Green Mountains,https://www.climate.columbia.edu/green-mountains,Rolling,9 - 12
+37,MIT,Mathroots,https://mathroots.mit.edu/,"March 3, 2025",9 - 12
+38,MIT,Summer Science Program,https://summerscience.org/,"February 21, 2025",11
+39,Texas Tech University,Clark Scholars Program,https://www.depts.ttu.edu/clarkscholars/about.php,"February 24, 2025",11
+40,Stony Brook University ,Summer Research Program,https://www.stonybrook.edu/commcms/garcia/summer_program/program_description,"March 3, 2025",10 - 12
+41,Michigan State University,"High School Honors Science, Math and Engineering Program (HSHSP)",https://education.msu.edu/hshsp/,Not offered for 2025,11
+42,Stanford University,Stanford Institutes of Medicine Summer Research Program,https://simr.stanford.edu/,"February 22, 2025",10 - 11
+43,CPET University of Florida,Student Science Training Program,https://www.cpet.ufl.edu/students/uf-cpet-summer-programs/student-science-training-program/,"April 1, 2025",12
+44,SPARC,Summer Program on Applied Rationality and Cognition (SPARC),https://www.sparc.camp/,"February 2, 2025",11 - 12
+45,Awesome Math,Awesome Math Summer Program,https://www.awesomemath.org/,"February 20, 2025",6 - 12
+46,MathCamp,Canada/USA Mathcamp,https://www.mathcamp.org/,"February 26, 2025",9 - 12
+47,Hampshire College,Hampshire College Summer Studies in Mathematics (HCSSiM),https://hcssim.org/,Rolling,10 -11
+48,MathILy,Mathematics Infused with Levity (MathILy),https://www.mathily.org/,"April 29, 2025",9 - 11
+49,PROMYS,Program in Mathematics for Young Scientists (PROMYS),https://promys.org/,"March 3, 2025",9 - 12
+50,Prove it!,Prove it! Math Academy,https://proveitmath.org/,Not offered for 2025,9 - 11
+51,Ross Mathematics Program,Ross Mathematics Program ,https://rossprogram.org/,"March 15, 2025",9 - 12
+52,Texas State University,Honors Summer Math Camp (HSMC),https://www.txst.edu/mathworks/camps/Summer-Math-Camps-Information/hsmc.html,"February 15, 2025",9 - 12

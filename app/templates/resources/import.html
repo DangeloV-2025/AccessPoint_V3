@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Import Resources{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Import Resources</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Upload CSV File</h5>
+            
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="resource_type" class="form-label">Resource Type</label>
+                    <select class="form-select" id="resource_type" name="resource_type" required>
+                        <option value="">Select a type...</option>
+                        {% for type_key, type_config in config.RESOURCE_TYPES.items() %}
+                            <option value="{{ type_key }}">{{ type_config.display_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="file" class="form-label">CSV File</label>
+                    <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Required CSV Fields:</h6>
+                    <ul>
+                        <li>name (required)</li>
+                        <li>description</li>
+                        <li>deadline</li>
+                        <li>apply_link</li>
+                        <li>tags (comma-separated)</li>
+                        <li>type-specific fields (see documentation)</li>
+                    </ul>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Import Resources</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

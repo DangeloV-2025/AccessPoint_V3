@@ -6,7 +6,5 @@ __pycache__/
 *.pyw
 *.pyz
 
-resources/
-
 *.env
 crev-project/

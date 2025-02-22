@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Resources{% endblock %}
+
+{% block main_class %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .resources-header {
+        background: linear-gradient(135deg, var(--dark-blue), var(--medium-blue));
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+    }
+
+    .filter-card {
+        position: sticky;
+        top: 2rem;
+    }
+
+    .resource-type-badge {
+        background-color: var(--light-blue);
+        color: var(--dark-blue);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .deadline-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+
+    .deadline-soon {
+        background-color: #ffd700;
+        color: #000;
+    }
+
+    .deadline-passed {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .search-box {
+        border-radius: 50px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        border: 2px solid var(--light-blue);
+    }
+
+    .search-box:focus {
+        border-color: var(--medium-blue);
+        box-shadow: 0 0 0 0.2rem rgba(0, 180, 216, 0.25);
+    }
+
+    .filter-btn.active {
+        background-color: var(--medium-blue);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Resources Header -->
+<div class="resources-header text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-3">College Resources</h1>
+                <p class="lead mb-0">Find scholarships, fly-in programs, and pre-college opportunities</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3">
+            <div class="filter-card card mb-4">
+                <div class="card-body">
+                    <!-- Search -->
+                    <div class="mb-4">
+                        <h5 class="card-title">Search</h5>
+                        <input type="text" 
+                               class="form-control search-box" 
+                               id="resourceSearch" 
+                               placeholder="Search resources..."
+                               onkeyup="filterResources()">
+                    </div>
+
+                    <!-- Resource Types -->
+                    <div class="mb-4">
+                        <h5 class="card-title">Resource Type</h5>
+                        <div class="d-flex flex-column gap-2">
+                            <button class="btn btn-outline-primary filter-btn active" 
+                                    onclick="filterByType('all')">
+                                All Resources
+                            </button>
+                            <button class="btn btn-outline-primary filter-btn" 
+                                    onclick="filterByType('scholarship')">
+                                Scholarships
+                            </button>
+                            <button class="btn btn-outline-primary filter-btn" 
+                                    onclick="filterByType('fly-in')">
+                                Fly-In Programs
+                            </button>
+                            <button class="btn btn-outline-primary filter-btn" 
+                                    onclick="filterByType('pre-college')">
+                                Pre-College Programs
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Deadline Filter -->
+                    <div>
+                        <h5 class="card-title">Deadline</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="upcomingOnly" 
+                                   onchange="filterResources()">
+                            <label class="form-check-label" for="upcomingOnly">
+                                Show upcoming only
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources List -->
+        <div class="col-lg-9">
+            <div class="row g-4" id="resourcesList">
+                {% for resource in resources %}
+                <div class="col-md-6 resource-item" 
+                     data-type="{{ resource.resource_type }}"
+                     data-name="{{ resource.name.lower() }}"
+                     data-deadline="{{ resource.deadline.strftime('%Y-%m-%d') if resource.deadline else '' }}">
+                    <div class="card h-100" data-aos="fade-up">
+                        {% if resource.deadline %}
+                            {% set days_until = (resource.deadline - now).days %}
+                            {% if days_until < 0 %}
+                                <div class="deadline-badge deadline-passed">Deadline Passed</div>
+                            {% elif days_until <= 30 %}
+                                <div class="deadline-badge deadline-soon">{{ days_until }} Days Left</div>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <span class="resource-type-badge mb-2 d-inline-block">
+                                {{ resource.resource_type|title }}
+                            </span>
+                            <h3 class="h5 card-title">
+                                <a href="{{ url_for('resources.show', id=resource.id) }}" 
+                                   class="text-decoration-none text-dark">
+                                    {{ resource.name }}
+                                </a>
+                            </h3>
+                            <p class="card-text text-muted">{{ resource.description[:150] }}...</p>
+                            
+                            {% if resource.deadline %}
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="far fa-calendar-alt"></i>
+                                    Deadline: {{ resource.deadline.strftime('%B %d, %Y') }}
+                                </small>
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <a href="{{ url_for('resources.show', id=resource.id) }}" 
+                               class="btn btn-outline-primary btn-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterResources() {
+    const searchTerm = document.getElementById('resourceSearch').value.toLowerCase();
+    const selectedType = document.querySelector('.filter-btn.active').textContent.trim().toLowerCase();
+    const upcomingOnly = document.getElementById('upcomingOnly').checked;
+    const today = new Date().toISOString().split('T')[0];
+
+    document.querySelectorAll('.resource-item').forEach(item => {
+        const name = item.dataset.name;
+        const type = item.dataset.type;
+        const deadline = item.dataset.deadline;
+        
+        let showItem = true;
+
+        // Check search term
+        if (searchTerm && !name.includes(searchTerm)) {
+            showItem = false;
+        }
+
+        // Check resource type
+        if (selectedType !== 'all resources' && type !== selectedType) {
+            showItem = false;
+        }
+
+        // Check deadline
+        if (upcomingOnly && deadline && deadline < today) {
+            showItem = false;
+        }
+
+        item.style.display = showItem ? '' : 'none';
+    });
+}
+
+function filterByType(type) {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    filterResources();
+}
+
+// Initialize filtering
+document.addEventListener('DOMContentLoaded', filterResources);
+</script>
+{% endblock %} 
