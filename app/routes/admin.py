@@ -343,3 +343,22 @@ def ensure_admin_users():
     except Exception as e:
         print(f"Error in ensure_admin_users: {str(e)}")
         db.session.rollback()
+
+@admin_bp.route('/admin/blogs/<int:id>/delete', methods=['POST'])
+@login_required
+def delete_blog_post(id):
+    if not current_user.is_admin:
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('main.index'))
+    
+    try:
+        post = BlogPost.query.get_or_404(id)
+        db.session.delete(post)
+        db.session.commit()
+        flash('Blog post deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting blog post: {str(e)}")
+        flash('Error deleting blog post.', 'error')
+    
+    return redirect(url_for('admin.manage_blogs'))
