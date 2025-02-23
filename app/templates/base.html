@@ -60,6 +60,18 @@
             transform: scale(1.05);
         }
 
+        .navbar-toggler {
+            border-color: var(--light-blue);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .navbar-nav .nav-item:last-child .nav-link {
+            padding-right: 0;
+        }
+
         .admin-nav .nav-link {
             color: var(--dark-blue) !important; /* Set the text color to dark blue */
             padding: 1rem;
@@ -172,13 +184,12 @@
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
                 Access Point
             </a>
-            <!-- ... navbar toggler ... -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('resources.index') }}">Resources</a>
                     </li>
@@ -193,7 +204,28 @@
                     </li>
                 </ul>
                 
-                <!-- ... auth buttons ... -->
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.dashboard') }}">My Dashboard</a>
+                        </li>
+                        {% if current_user.is_admin %}
+                            <li class="nav-item admin-button-box">
+                                <a class="nav-link" href="{{ url_for('admin.admin_dashboard') }}">Admin</a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
