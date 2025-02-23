@@ -5,25 +5,18 @@ import logging
 load_dotenv()
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'postgresql://postgres:postgres@localhost/college_access_db'
+    SECRET_KEY = os.getenv('SECRET_KEY', 'dev')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SUPABASE_URL = os.environ.get('SUPABASE_URL')
-    SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY')
-    SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_KEY')
     
-
-    # Update ADMIN_EMAILS handling
-    ADMIN_EMAILS = [
-        email.strip() 
-        for email in os.environ.get("ADMIN_EMAILS", "").split(",") 
-        if email.strip() != ""
-    ]
-    print(f"Loaded admin emails: {ADMIN_EMAILS}")  # Debug print
+    # Supabase configuration
+    SUPABASE_URL = os.getenv('SUPABASE_URL')
+    SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+    SUPABASE_SERVICE_KEY = os.getenv('SUPABASE_SERVICE_KEY')
     
+    # Admin configuration
+    ADMIN_EMAILS = ['angelv4331@gmail.com', 'Vincent.dangelo@gilmour.org']
     
-
     # Resource type configurations
     RESOURCE_TYPES = {
         'scholarship': {
@@ -76,6 +69,9 @@ class Config:
     } 
 
     # Logging configuration
+    LOG_TO_STDOUT = os.getenv('LOG_TO_STDOUT', 'false').lower() == 'true'
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+    
     LOGGING_CONFIG = {
         'version': 1,
         'formatters': {
@@ -85,13 +81,19 @@ class Config:
         },
         'handlers': {
             'file': {
-                'class': 'logging.FileHandler',
-                'filename': 'logs/import.log',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': 'logs/access_point.log',
+                'maxBytes': 10240,
+                'backupCount': 10,
                 'formatter': 'default',
+            },
+            'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'default'
             }
         },
         'root': {
-            'level': 'INFO',
-            'handlers': ['file']
+            'level': LOG_LEVEL,
+            'handlers': ['file', 'console'] if LOG_TO_STDOUT else ['file']
         }
     } 
