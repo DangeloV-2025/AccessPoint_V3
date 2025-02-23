@@ -33,4 +33,12 @@ def dashboard():
     return render_template('main/dashboard.html', 
                          applications=applications,
                          completed_tasks=completed_tasks,
-                         now=now) 
+                         now=now)
+
+@main_bp.route('/about')
+def about():
+    return render_template('main/about.html')
+
+@main_bp.route('/contact')
+def contact():
+    return render_template('main/contact.html') 

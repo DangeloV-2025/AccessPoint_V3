@@ -106,7 +106,7 @@
                                 <div class="blog-meta d-flex justify-content-between align-items-center">
                                     <span>
                                         <i class="fas fa-user-circle"></i>
-                                        {{ post.author.email }}
+                                        {{ post.author_name or post.author.email.split('@')[0]|title }}
                                     </span>
                                     <span>
                                         <i class="far fa-calendar-alt"></i>

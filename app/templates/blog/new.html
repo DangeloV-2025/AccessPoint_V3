@@ -1,55 +1,46 @@
 <!-- app/templates/blog/new.html -->
 {% extends "base.html" %}
-{% block title %}Create New Blog Post{% endblock %}
+{% block title %}New Blog Post{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1>Create New Blog Post</h1>
-    
-    <form method="POST">
-        <!-- Title Field -->
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="title" 
-                name="title" 
-                required
-            >
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title mb-0">Create New Blog Post</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="author_name" class="form-label">Author Name</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="author_name" 
+                                   name="author_name" 
+                                   value="{{ current_user.email.split('@')[0]|title }}"
+                                   required>
+                            <small class="text-muted">This name will be displayed as the author of the post</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                        </div>
+
+                        <div class="text-end">
+                            <a href="{{ url_for('blog.index') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Publish Post</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        
-        <!-- Content Field -->
-        <div class="mb-3">
-            <label for="content" class="form-label">Content</label>
-            <textarea 
-                class="form-control" 
-                id="content" 
-                name="content" 
-                rows="8" 
-                required
-            ></textarea>
-        </div>
-        
-        <!-- Actions -->
-        <div class="mb-3">
-            <!-- If the user clicks this button, 'publish' will appear in request.form -->
-            <button 
-                type="submit" 
-                class="btn btn-primary" 
-                name="publish"
-                value="1"
-            >
-                Publish
-            </button>
-            <!-- This button will NOT contain 'publish' in request.form, so it saves as a draft -->
-            <button 
-                type="submit" 
-                class="btn btn-secondary"
-            >
-                Save as Draft
-            </button>
-        </div>
-    </form>
+    </div>
 </div>
 {% endblock %}

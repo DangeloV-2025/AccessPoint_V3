@@ -27,6 +27,7 @@ def new():
         post = BlogPost(
             title=request.form['title'],
             content=request.form['content'],
+            author_name=request.form['author_name'],
             author=current_user,
             status='published',
             published_at=datetime.utcnow()

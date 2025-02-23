@@ -13,14 +13,16 @@
     <span class="badge bg-secondary">{{ post.category.name }}</span>
     {% endif %}
 
-    <p class="text-muted my-2">
-        By {{ post.author.email }}
-        {% if post.status == 'published' and post.published_at %}
-            on {{ post.published_at.strftime('%B %d, %Y') }}
-        {% else %}
-            <span class="badge bg-warning">Draft</span>
-        {% endif %}
-    </p>
+    <div class="blog-meta text-muted mb-4">
+        <span class="me-3">
+            <i class="fas fa-user-circle"></i>
+            {{ post.author_name or post.author.email.split('@')[0]|title }}
+        </span>
+        <span>
+            <i class="far fa-calendar-alt"></i>
+            {{ post.published_at.strftime('%B %d, %Y') }}
+        </span>
+    </div>
 
     <hr>
 

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Import Resources{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            {% include 'admin/includes/sidebar.html' %}
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Import Resources</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="resource_type" class="form-label">Resource Type</label>
+                            <select class="form-select" id="resource_type" name="resource_type" required>
+                                <option value="">Select a type...</option>
+                                {% for type_key, type_config in config.RESOURCE_TYPES.items() %}
+                                    <option value="{{ type_key }}">{{ type_config.display_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="file" class="form-label">CSV File</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h6>Required CSV Fields:</h6>
+                            <ul class="mb-0">
+                                <li>name (required)</li>
+                                <li>description</li>
+                                <li>deadline</li>
+                                <li>apply_link</li>
+                                <li>tags (comma-separated)</li>
+                                <li>type-specific fields (see below)</li>
+                            </ul>
+                        </div>
+
+                        <div id="type-fields" class="alert alert-secondary d-none">
+                            <h6>Type-Specific Fields:</h6>
+                            <ul id="field-list" class="mb-0">
+                            </ul>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Import Resources</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <h6>CSV Format Examples:</h6>
+    <div class="accordion" id="formatExamples">
+        <!-- Fly-in Format -->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flyInFormat">
+                    Fly-in Program Format
+                </button>
+            </h2>
+            <div id="flyInFormat" class="accordion-collapse collapse" data-bs-parent="#formatExamples">
+                <div class="accordion-body">
+                    <p>Required fields:</p>
+                    <ul>
+                        <li>host_institution</li>
+                        <li>program_name</li>
+                        <li>email</li>
+                        <li>deadline (regular_deadline)</li>
+                        <li>apply_link</li>
+                        <li>target_applicants</li>
+                        <li>priority_deadline (optional)</li>
+                        <li>session_1, session_2, session_3 (optional)</li>
+                        <li>num_essays</li>
+                        <li>num_LORs</li>
+                        <li>other_notes (optional)</li>
+                        <li>hosting_situation (optional)</li>
+                        <li>program_status (TRUE/FALSE)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scholarship Format -->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#scholarshipFormat">
+                    Scholarship Format
+                </button>
+            </h2>
+            <div id="scholarshipFormat" class="accordion-collapse collapse" data-bs-parent="#formatExamples">
+                <div class="accordion-body">
+                    <p>Required fields:</p>
+                    <ul>
+                        <li>name</li>
+                        <li>amount</li>
+                        <li>deadline</li>
+                        <li>description</li>
+                        <li>apply_link</li>
+                        <li>open_date (optional)</li>
+                        <li>tags (comma-separated)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pre-college Format -->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#preCollegeFormat">
+                    Pre-college Program Format
+                </button>
+            </h2>
+            <div id="preCollegeFormat" class="accordion-collapse collapse" data-bs-parent="#formatExamples">
+                <div class="accordion-body">
+                    <p>Required fields:</p>
+                    <ul>
+                        <li>organization</li>
+                        <li>name</li>
+                        <li>apply_link</li>
+                        <li>deadline</li>
+                        <li>grade_eligibility</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('resource_type').addEventListener('change', function() {
+    const typeFields = document.getElementById('type-fields');
+    const fieldList = document.getElementById('field-list');
+    const resourceTypes = {{ config.RESOURCE_TYPES|tojson }};
+    
+    fieldList.innerHTML = '';
+    
+    if (this.value && resourceTypes[this.value]) {
+        const fields = resourceTypes[this.value].fields;
+        for (const [key, label] of Object.entries(fields)) {
+            const li = document.createElement('li');
+            li.textContent = `${label} (${key})`;
+            fieldList.appendChild(li);
+        }
+        typeFields.classList.remove('d-none');
+    } else {
+        typeFields.classList.add('d-none');
+    }
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-header {
+        background: linear-gradient(135deg, var(--dark-blue), var(--medium-blue));
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+    }
+
+    .mission-section {
+        background-color: var(--light-blue);
+        padding: 3rem 0;
+        margin: 3rem 0;
+    }
+
+    .value-card {
+        height: 100%;
+        border: none;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .value-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- About Header -->
+<div class="about-header text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-3">About Access Point</h1>
+                <p class="lead mb-0">Empowering students on their journey to higher education</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Mission Section -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="mb-4">Our Mission</h2>
+            <p class="lead">
+                Access Point is dedicated to breaking down barriers to higher education by providing comprehensive resources 
+                and support to students navigating the college application process. We believe that every student deserves 
+                access to quality education, regardless of their background or circumstances.
+            </p>
+        </div>
+    </div>
+
+    <!-- Values Section -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card value-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-graduation-cap fa-3x mb-3 text-primary"></i>
+                    <h3 class="h4">Educational Access</h3>
+                    <p>We strive to make college education accessible to all students by providing resources, guidance, and support.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card value-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                    <h3 class="h4">Community Support</h3>
+                    <p>Building a supportive community where students can find guidance, share experiences, and grow together.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card value-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-star fa-3x mb-3 text-primary"></i>
+                    <h3 class="h4">Excellence</h3>
+                    <p>Committed to providing high-quality resources and information to help students achieve their educational goals.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

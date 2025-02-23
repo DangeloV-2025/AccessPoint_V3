@@ -11,7 +11,7 @@ class Resource(db.Model):
     description = db.Column(db.Text)
     deadline = db.Column(db.DateTime)
     apply_link = db.Column(db.String(500))
-    resource_type = db.Column(db.String(50))  # 'scholarship', 'fly-in', 'pre-college'
+    resource_type = db.Column(db.String(50), nullable=False)  # Should contain 'scholarship', 'fly-in', or 'pre-college'
     attributes = db.Column(JSONB)  # Store type-specific fields
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     

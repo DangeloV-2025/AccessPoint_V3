@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-header {
+        background: linear-gradient(135deg, var(--dark-blue), var(--medium-blue));
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+    }
+
+    .contact-card {
+        border: none;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-info {
+        background-color: var(--light-blue);
+        padding: 2rem;
+        border-radius: 10px;
+    }
+
+    .contact-info i {
+        color: var(--medium-blue);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Contact Header -->
+<div class="contact-header text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-3">Contact Us</h1>
+                <p class="lead mb-0">Get in touch with the Access Point team</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card contact-card">
+                <div class="card-body p-5">
+                    <div class="text-center mb-5">
+                        <h2>We're Here to Help</h2>
+                        <p class="lead">Have questions or need assistance? We'd love to hear from you.</p>
+                    </div>
+
+                    <div class="contact-info mb-5">
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="fas fa-envelope fa-2x me-3"></i>
+                            <div>
+                                <h3 class="h5 mb-1">Email Us</h3>
+                                <p class="mb-0">
+                                    <a href="mailto:accesspointfoundation@gmail.com" class="text-decoration-none">
+                                        accesspointfoundation@gmail.com
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <p class="mb-0">
+                            We aim to respond to all inquiries within 24-48 hours during business days. 
+                            Whether you're a student seeking guidance, a potential partner, or just interested 
+                            in learning more about Access Point, we're here to help!
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <h3 class="h4 mb-4">Follow Us</h3>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

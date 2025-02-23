@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
 
@@ -71,5 +72,26 @@ class Config:
                 "Submit application",
                 "Plan travel if needed"
             ]
+        }
+    } 
+
+    # Logging configuration
+    LOGGING_CONFIG = {
+        'version': 1,
+        'formatters': {
+            'default': {
+                'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+            }
+        },
+        'handlers': {
+            'file': {
+                'class': 'logging.FileHandler',
+                'filename': 'logs/import.log',
+                'formatter': 'default',
+            }
+        },
+        'root': {
+            'level': 'INFO',
+            'handlers': ['file']
         }
     } 

@@ -1,11 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, current_app
 from flask_login import login_required, current_user
-from app.models import User, Resource, BlogPost, Role, BlogCategory
+from app.models import User, Resource, BlogPost, Role, BlogCategory, Tag
 from app import db
 from werkzeug.utils import secure_filename
 import csv
 from io import StringIO
 from datetime import datetime
+import os
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -86,73 +87,144 @@ def manage_resources():
     resources = Resource.query.all()
     return render_template('admin/resources.html', resources=resources)
 
-@admin_bp.route('/admin/resources/import', methods=['POST'])
+@admin_bp.route('/admin/resources/import', methods=['GET', 'POST'])
 @login_required
 def import_resources():
     if not current_user.is_admin:
         flash('Unauthorized access.', 'error')
         return redirect(url_for('main.index'))
 
-    if 'file' not in request.files:
-        flash('No file uploaded', 'error')
-        return redirect(url_for('admin.manage_resources'))
+    # Create logs directory if it doesn't exist
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
 
-    file = request.files['file']
-    resource_type = request.form.get('resource_type')
-
-    if file.filename == '':
-        flash('No file selected', 'error')
-        return redirect(url_for('admin.manage_resources'))
-
-    if not resource_type:
-        flash('Resource type is required', 'error')
-        return redirect(url_for('admin.manage_resources'))
-
-    if file and file.filename.endswith('.csv'):
-        try:
-            # Read and process CSV
-            csv_content = file.read().decode('utf-8')
-            csv_file = StringIO(csv_content)
-            reader = csv.DictReader(csv_file)
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file uploaded', 'error')
+            return redirect(request.url)
             
-            resources_created = 0
-            for row in reader:
+        file = request.files['file']
+        resource_type = request.form.get('resource_type')
+        
+        if not file or not resource_type:
+            flash('Missing required fields', 'error')
+            return redirect(request.url)
+
+        try:
+            # Read CSV file
+            stream = StringIO(file.stream.read().decode("UTF8"), newline=None)
+            csv_data = csv.DictReader(stream)
+            rows_processed = 0
+            errors = []
+            
+            for row in csv_data:
                 try:
-                    # Create resource
+                    # Basic validation
+                    # Handle program_name field for fly-ins
+                    if row.get('program_name'):
+                        row['name'] = row['program_name']
+                    
+                    if not row.get('name'):
+                        errors.append(f"Row {rows_processed + 1}: Missing name field")
+                        continue
+
+                    # Create base resource
                     resource = Resource(
                         name=row.get('name'),
-                        description=row.get('description', ''),
+                        description=row.get('description') or row.get('target_applicants'),  # Use target_applicants as description for fly-ins
                         resource_type=resource_type,
-                        apply_link=row.get('apply_link', ''),
-                        deadline=datetime.strptime(row['deadline'], '%m/%d/%y') if row.get('deadline') else None
+                        apply_link=row.get('apply_link')
                     )
-                    
-                    # Add type-specific attributes
+
+                    # Handle deadline based on resource type
+                    deadline_str = None
+                    if resource_type == 'fly-in':
+                        deadline_str = row.get('regular_deadline')
+                    else:
+                        deadline_str = row.get('deadline')
+
+                    if deadline_str and deadline_str.lower() not in ['nan', 'rolling', 'not offered for 2025']:
+                        try:
+                            # Try different date formats
+                            date_formats = ['%m/%d/%y', '%m/%d/%Y', '%Y-%m-%d', '%B %d, %Y']
+                            for fmt in date_formats:
+                                try:
+                                    resource.deadline = datetime.strptime(deadline_str.strip(), fmt)
+                                    break
+                                except ValueError:
+                                    continue
+                            if not resource.deadline and deadline_str:
+                                errors.append(f"Row {rows_processed + 1}: Invalid date format - {deadline_str}")
+                        except Exception as e:
+                            errors.append(f"Row {rows_processed + 1}: Date error - {str(e)}")
+
+                    # Handle type-specific fields
                     attributes = {}
-                    type_config = current_app.config['RESOURCE_TYPES'].get(resource_type, {})
-                    for field_key in type_config.get('fields', {}).keys():
-                        if field_key in row:
-                            attributes[field_key] = row[field_key]
-                    resource.attributes = attributes
-                    
+                    if resource_type == 'fly-in':
+                        attributes.update({
+                            'host_institution': row.get('host_institution'),
+                            'program_name': row.get('program_name'),
+                            'in_person': row.get('in_person', True),
+                            'email': row.get('email'),
+                            'priority_deadline': row.get('priority_deadline'),
+                            'regular_deadline': row.get('regular_deadline'),
+                            'target_applicants': row.get('target_applicants'),
+                            'session_1': row.get('session_1'),
+                            'session_2': row.get('session_2'),
+                            'session_3': row.get('session_3'),
+                            'num_essays': row.get('num_essays'),
+                            'num_lors': row.get('num_LORs'),
+                            'other_notes': row.get('other_notes'),
+                            'hosting_situation': row.get('hosting_situation'),
+                            'program_status': row.get('program_status', 'TRUE') == 'TRUE'
+                        })
+                    elif resource_type == 'scholarship':
+                        attributes.update({
+                            'amount': row.get('amount'),
+                            'open_date': row.get('open_date')
+                        })
+                    elif resource_type == 'pre-college':
+                        attributes.update({
+                            'organization': row.get('organization'),
+                            'grade_eligibility': row.get('grade_eligibility')
+                        })
+
+                    resource.attributes = {k: v for k, v in attributes.items() if v is not None}
+
+                    # Handle tags
+                    if row.get('tags'):
+                        tag_names = [t.strip() for t in row['tags'].split(',') if t.strip()]
+                        for tag_name in tag_names:
+                            tag = Tag.query.filter_by(name=tag_name).first()
+                            if not tag:
+                                tag = Tag(name=tag_name)
+                                db.session.add(tag)
+                            resource.tags.append(tag)
+
                     db.session.add(resource)
-                    resources_created += 1
-                    
+                    rows_processed += 1
+
                 except Exception as e:
-                    db.session.rollback()
-                    flash(f'Error processing row: {str(e)}', 'error')
-                    return redirect(url_for('admin.manage_resources'))
-            
+                    errors.append(f"Row {rows_processed + 1}: {str(e)}")
+                    current_app.logger.error(f"Error processing row {rows_processed + 1}: {str(e)}")
+                    continue
+
             db.session.commit()
-            flash(f'Successfully imported {resources_created} resources', 'success')
             
+            # Show success/error messages
+            if rows_processed > 0:
+                flash(f'Successfully imported {rows_processed} resources', 'success')
+            if errors:
+                for error in errors:
+                    flash(error, 'error')
+                current_app.logger.error(f"Import errors: {errors}")
+
         except Exception as e:
-            flash(f'Error processing CSV: {str(e)}', 'error')
-            return redirect(url_for('admin.manage_resources'))
-    else:
-        flash('Invalid file type. Please upload a CSV file.', 'error')
-    
-    return redirect(url_for('admin.manage_resources'))
+            db.session.rollback()
+            flash(f'Error importing resources: {str(e)}', 'error')
+            current_app.logger.error(f"Import error: {str(e)}")
+            
+    return render_template('admin/import_resources.html')
 
 @admin_bp.route('/admin/resources/<int:id>/delete', methods=['POST'])
 @login_required
@@ -183,7 +255,6 @@ def manage_blogs():
 @login_required
 def check_admin():
     """Debug route to check admin status"""
-    from flask import current_app
     
     return {
         'user_email': current_user.email,
@@ -202,7 +273,6 @@ from app.config import Config
 
 def ensure_admin_users():
     """Ensure all emails in ADMIN_EMAILS exist and have the 'admin' role."""
-    from flask import current_app
     
     print(f"Starting admin user setup...")
     print(f"Admin emails from config: {current_app.config['ADMIN_EMAILS']}")

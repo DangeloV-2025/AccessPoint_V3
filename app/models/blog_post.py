@@ -8,6 +8,7 @@ class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    author_name = db.Column(db.String(100))  # Display name for the author
     status = db.Column(db.String(20), default='draft')  # draft, published
     category_id = db.Column(db.Integer, db.ForeignKey('blog_categories.id'))
     published_at = db.Column(db.DateTime)
