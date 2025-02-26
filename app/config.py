@@ -14,6 +14,9 @@ class Config:
     SUPABASE_KEY = os.getenv('SUPABASE_KEY')
     SUPABASE_SERVICE_KEY = os.getenv('SUPABASE_SERVICE_KEY')
     
+    # TinyMCE configuration
+    TINYMCE_API_KEY = os.getenv('TINYMCE_API_KEY')
+    
     # Admin configuration
     ADMIN_EMAILS = ['angelv4331@gmail.com', 'Vincent.dangelo@gilmour.org']
     
