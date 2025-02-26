@@ -6,3 +6,7 @@
 2025-02-22 23:05:25,383 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:25]
 2025-02-22 23:05:29,371 WARNING: Supabase logout failed for user Vincent.dangelo@gilmour.org: 'SUPABASE_ANON_KEY' [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:132]
 2025-02-22 23:05:29,371 INFO: User Vincent.dangelo@gilmour.org logged out successfully [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:135]
+2025-02-24 14:28:35,588 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:25]
+2025-02-24 14:28:35,988 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:25]
+2025-02-25 15:31:05,785 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:25]
+2025-02-25 15:31:06,286 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:25]
