@@ -54,61 +54,103 @@ def login():
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get('email')
+        password = request.form.get('password')
         
-        
-        # Input validation
-        if not email or not password:
-            flash('All fields are required.', 'error')
-            return render_template('auth/register.html')
-        
-        # Check if user already exists
+        # First check if user already exists in our database
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash('Email already registered. Please login.', 'error')
+            flash('This email is already registered. Please login instead.', 'error')
             return redirect(url_for('auth.login'))
         
         try:
-            # Register with Supabase
-            supabase = get_supabase()
+            current_app.logger.info(f"Attempting to register user: {email}")
+            
+            # Create user in Supabase
             auth_response = supabase.auth.sign_up({
                 "email": email,
                 "password": password
             })
             
+            current_app.logger.info(f"Supabase registration response: {auth_response}")
+            
             if auth_response.user:
-                # Create user in our database
+                # Create local user
+                user = User(
+                    id=auth_response.user.id,
+                    email=email
+                )
+                
                 try:
-                    user = User(
-                        email=email,
-                        id=auth_response.user.id
-                    )
                     db.session.add(user)
                     db.session.commit()
                     
-                    flash('Registration successful! Please check your email to verify your account.', 'success')
-                    return redirect(url_for('auth.login'))
-                
+                    current_app.logger.info(f"Successfully created local user record for {email}")
+                    flash('Registration successful! You can now login.', 'success')
+                    login_user(user)
+                    return redirect(url_for('main.index'))
                 except Exception as db_error:
-                    logging.error(f"Database error during user creation: {str(db_error)}")
-                    # Try to clean up Supabase user if database insert fails
-                    try:
-                        supabase.auth.admin.delete_user(auth_response.user.id)
-                    except:
-                        pass
+                    db.session.rollback()
+                    current_app.logger.error(f"Database error during user creation: {str(db_error)}")
+                    
+                    # Check if this is a duplicate user error
+                    if "unique constraint" in str(db_error).lower() and "email" in str(db_error).lower():
+                        # User already exists in our database, try to log them in
+                        existing_user = User.query.filter_by(email=email).first()
+                        if existing_user:
+                            login_user(existing_user)
+                            flash('You are now logged in.', 'success')
+                            return redirect(url_for('main.index'))
+                    
                     flash('An error occurred during registration. Please try again.', 'error')
+                    return redirect(url_for('auth.register'))
             else:
-                flash('Supabase registration failed. Please try again.', 'error')
-                
+                current_app.logger.error(f"Failed to create Supabase user for {email}")
+                flash('Registration failed. Please try again.', 'error')
         except Exception as e:
-            logging.error(f"Supabase registration error: {str(e)}")
-            error_message = str(e)
-            if 'User already registered' in error_message:
-                flash('Email already registered. Please login.', 'error')
+            current_app.logger.error(f"Registration error for {email}: {str(e)}")
+            # Check if the error is because the user already exists in Supabase
+            if "User already registered" in str(e):
+                # Try to find the user in our database
+                existing_user = User.query.filter_by(email=email).first()
+                if existing_user:
+                    # User exists in both Supabase and our database, log them in
+                    login_user(existing_user)
+                    flash('You are now logged in.', 'success')
+                    return redirect(url_for('main.index'))
+                else:
+                    # User exists in Supabase but not in our database
+                    # Try to get the user ID from Supabase
+                    try:
+                        # Try to sign in to get the user ID
+                        auth_response = supabase.auth.sign_in_with_password({
+                            "email": email,
+                            "password": password
+                        })
+                        
+                        if auth_response.user:
+                            # Create the user in our database
+                            user = User(
+                                id=auth_response.user.id,
+                                email=email
+                            )
+                            db.session.add(user)
+                            db.session.commit()
+                            
+                            login_user(user)
+                            flash('You are now logged in.', 'success')
+                            return redirect(url_for('main.index'))
+                    except Exception as login_error:
+                        current_app.logger.error(f"Error during login after registration: {str(login_error)}")
+                        
+                flash('This email is already registered. Please login instead.', 'error')
+                return redirect(url_for('auth.login'))
             else:
-                flash(f'Registration failed: {error_message}', 'error')
+                flash('Registration failed. Please try again.', 'error')
     
     return render_template('auth/register.html')
 

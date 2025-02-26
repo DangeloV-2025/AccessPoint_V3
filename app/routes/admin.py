@@ -7,6 +7,7 @@ import csv
 from io import StringIO
 from datetime import datetime
 import os
+from supabase import create_client, Client
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -60,19 +61,81 @@ def create_role():
 
 @admin_bp.route('/admin/users/<uuid:id>/role', methods=['POST'])
 @login_required
-def update_user_role(id):
+def assign_role(id):
     if not current_user.is_admin:
         flash('Unauthorized access.', 'error')
         return redirect(url_for('main.index'))
     
     user = User.query.get_or_404(id)
     role_name = request.form.get('role')
-    role = Role.query.filter_by(name=role_name).first()
     
-    if role:
-        user.roles = [role]  # Replace existing roles
+    if not role_name:
+        flash('No role selected.', 'error')
+        return redirect(url_for('admin.manage_users'))
+    
+    role = Role.query.filter_by(name=role_name).first()
+    if not role:
+        flash(f'Role {role_name} not found.', 'error')
+        return redirect(url_for('admin.manage_users'))
+    
+    if role not in user.roles:
+        user.roles.append(role)
         db.session.commit()
-        flash(f'Updated role for {user.email}', 'success')
+        flash(f'Role {role_name} assigned to {user.email}.', 'success')
+    else:
+        flash(f'User already has the role {role_name}.', 'info')
+    
+    return redirect(url_for('admin.manage_users'))
+
+@admin_bp.route('/admin/users/<uuid:id>/delete', methods=['POST'])
+@login_required
+def delete_user(id):
+    if not current_user.is_admin:
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('main.index'))
+    
+    # Prevent admins from deleting themselves
+    if current_user.id == id:
+        flash('You cannot delete your own account.', 'error')
+        return redirect(url_for('admin.manage_users'))
+    
+    user = User.query.get_or_404(id)
+    
+    try:
+        # Store email for the success message
+        user_email = user.email
+        
+        # Delete user's applications and related data
+        applications = user.applications
+        for app in applications:
+            db.session.delete(app)
+        
+        # Delete user's blog posts
+        blog_posts = user.blog_posts
+        for post in blog_posts:
+            db.session.delete(post)
+        
+        # Delete the user
+        db.session.delete(user)
+        db.session.commit()
+        
+        # Try to delete the user from Supabase as well
+        try:
+            supabase_admin_client = create_client(
+                current_app.config['SUPABASE_URL'],
+                current_app.config['SUPABASE_SERVICE_KEY']
+            )
+            supabase_admin_client.auth.admin.delete_user(str(id))
+            current_app.logger.info(f"Deleted user {user_email} from Supabase")
+        except Exception as e:
+            current_app.logger.error(f"Failed to delete user from Supabase: {str(e)}")
+            # Continue even if Supabase deletion fails
+        
+        flash(f'User {user_email} has been deleted.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting user: {str(e)}")
+        flash(f'Error deleting user: {str(e)}', 'error')
     
     return redirect(url_for('admin.manage_users'))
 
@@ -268,7 +331,6 @@ def check_admin():
 import logging
 from app.models.user import User, Role
 from app import db
-from supabase import create_client, Client
 from app.config import Config
 
 def ensure_admin_users():
