@@ -424,3 +424,103 @@ def delete_blog_post(id):
         flash('Error deleting blog post.', 'error')
     
     return redirect(url_for('admin.manage_blogs'))
+
+@admin_bp.route('/admin/blog-queue')
+@login_required
+def blog_approval_queue():
+    if not current_user.is_admin:
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('main.index'))
+    
+    pending_posts = BlogPost.query.filter_by(status='pending_review').order_by(BlogPost.created_at.desc()).all()
+    return render_template('admin/blog_queue.html', posts=pending_posts)
+
+@admin_bp.route('/admin/blog/<int:id>/approve', methods=['POST'])
+@login_required
+def approve_blog(id):
+    if not current_user.is_admin:
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('main.index'))
+    
+    post = BlogPost.query.get_or_404(id)
+    post.status = 'published'
+    post.published_at = datetime.utcnow()
+    db.session.commit()
+    
+    flash(f'Blog post "{post.title}" has been approved and published.', 'success')
+    return redirect(url_for('admin.blog_approval_queue'))
+
+@admin_bp.route('/admin/blog/<int:id>/reject', methods=['POST'])
+@login_required
+def reject_blog(id):
+    if not current_user.is_admin:
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('main.index'))
+    
+    post = BlogPost.query.get_or_404(id)
+    notes = request.form.get('notes')
+    
+    post.status = 'rejected'
+    post.review_notes = notes
+    db.session.commit()
+    
+    flash(f'Blog post "{post.title}" has been rejected.', 'success')
+    return redirect(url_for('admin.blog_approval_queue'))
+
+@admin_bp.route('/admin/blog-management')
+@login_required
+def blog_management():
+    if not current_user.is_admin:
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('main.index'))
+    
+    # Get both published and draft posts
+    published_posts = BlogPost.query.filter_by(status='published')\
+        .order_by(BlogPost.published_at.desc()).all()
+    draft_posts = BlogPost.query.filter_by(status='draft')\
+        .order_by(BlogPost.created_at.desc()).all()
+    
+    return render_template('admin/blog_management.html',
+                         published_posts=published_posts,
+                         draft_posts=draft_posts)
+
+@admin_bp.route('/admin/db-health')
+@login_required
+def check_db_health():
+    if not current_user.is_admin:
+        flash('Unauthorized access.', 'error')
+        return redirect(url_for('main.index'))
+    
+    try:
+        # Test database connection
+        db.session.execute('SELECT 1')
+        
+        # Get all models from SQLAlchemy
+        models = db.Model.__subclasses__()
+        tables = db.engine.table_names()
+        
+        # Compare model tables with actual database tables
+        model_tables = {model.__tablename__ for model in models}
+        missing_tables = model_tables - set(tables)
+        extra_tables = set(tables) - model_tables
+        
+        health_data = {
+            'status': 'healthy',
+            'database_connected': True,
+            'models_count': len(models),
+            'database_tables_count': len(tables),
+            'missing_tables': list(missing_tables),
+            'extra_tables': list(extra_tables),
+            'is_synced': len(missing_tables) == 0 and len(extra_tables) == 0,
+            'models': [model.__tablename__ for model in models],
+            'tables': tables
+        }
+        
+        return render_template('admin/db_health.html', health_data=health_data)
+        
+    except Exception as e:
+        health_data = {
+            'status': 'unhealthy',
+            'error': str(e)
+        }
+        return render_template('admin/db_health.html', health_data=health_data), 500

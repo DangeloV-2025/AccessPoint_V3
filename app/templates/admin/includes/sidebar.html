@@ -17,6 +17,14 @@
                class="nav-link {% if request.endpoint == 'admin.manage_blogs' %}active{% endif %}">
                 <i class="fas fa-blog"></i> Blog Posts
             </a>
+            <a href="{{ url_for('admin.blog_approval_queue') }}" 
+               class="nav-link {% if request.endpoint == 'admin.blog_approval_queue' %}active{% endif %}">
+                <i class="fas fa-tasks"></i> Blog Queue
+                {% set pending_count = get_pending_blog_count() %}
+                {% if pending_count > 0 %}
+                <span class="badge bg-danger float-end">{{ pending_count }}</span>
+                {% endif %}
+            </a>
         </nav>
     </div>
 </div> 

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Preview: {{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-warning">
+        <i class="fas fa-eye"></i> 
+        <strong>Preview Mode:</strong> 
+        This is a preview of a pending blog post.
+        {% if post.status == 'rejected' %}
+        <div class="mt-2">
+            <strong>Rejection Notes:</strong> {{ post.review_notes or 'No notes provided.' }}
+        </div>
+        {% endif %}
+    </div>
+
+    <h1>{{ post.title }}</h1>
+
+    <div class="blog-meta text-muted mb-4">
+        <span class="me-3">
+            <i class="fas fa-user-circle"></i>
+            {{ post.author_name or post.author.email.split('@')[0]|title }}
+        </span>
+        <span>
+            <i class="far fa-calendar-alt"></i>
+            {{ post.created_at.strftime('%B %d, %Y') }}
+        </span>
+        <span class="ms-3">
+            <i class="fas fa-tag"></i>
+            Status: <span class="badge bg-{{ 'warning' if post.status == 'pending_review' else 'danger' }}">
+                {{ post.status|replace('_', ' ')|title }}
+            </span>
+        </span>
+    </div>
+
+    <hr>
+
+    <!-- Display blog content -->
+    <div class="mt-3">
+        <div class="blog-content">
+            {{ post.content|safe }}
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-4">
+        {% if current_user.is_admin %}
+            <a href="{{ url_for('admin.blog_approval_queue') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Queue
+            </a>
+            
+            {% if post.status == 'pending_review' %}
+            <form action="{{ url_for('admin.approve_blog', id=post.id) }}" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+            </form>
+            
+            <button class="btn btn-danger" 
+                    onclick="openRejectModal('{{ post.id }}', '{{ post.title }}')">
+                <i class="fas fa-times"></i> Reject
+            </button>
+            {% endif %}
+        {% else %}
+            <a href="{{ url_for('blog.edit', id=post.id) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit Post
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+{% if current_user.is_admin and post.status == 'pending_review' %}
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject Blog Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="rejectForm" method="POST">
+                <div class="modal-body">
+                    <p>Rejecting: <span id="postTitle" class="fw-bold"></span></p>
+                    <div class="mb-3">
+                        <label class="form-label">Feedback for Author (Optional)</label>
+                        <textarea name="notes" class="form-control" rows="4" 
+                                  placeholder="Explain why the post was rejected and what changes are needed..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Reject Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openRejectModal(postId, postTitle) {
+    document.getElementById('postTitle').textContent = postTitle;
+    document.getElementById('rejectForm').action = `/admin/blog/${postId}/reject`;
+    new bootstrap.Modal(document.getElementById('rejectModal')).show();
+}
+</script>
+{% endif %}
+
+{% block extra_css %}
+<style>
+    .blog-content {
+        font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+        line-height: 1.6;
+        font-size: 1.1rem;
+    }
+    
+    .blog-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1rem 0;
+    }
+    
+    .blog-content h1, 
+    .blog-content h2, 
+    .blog-content h3, 
+    .blog-content h4, 
+    .blog-content h5, 
+    .blog-content h6 {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .blog-content blockquote {
+        border-left: 4px solid var(--medium-blue);
+        padding-left: 1rem;
+        margin-left: 0;
+        color: #666;
+    }
+    
+    .blog-content pre {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+    }
+</style>
+{% endblock %}
+{% endblock %} 

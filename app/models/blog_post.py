@@ -9,11 +9,12 @@ class BlogPost(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     author_name = db.Column(db.String(100))  # Display name for the author
-    status = db.Column(db.String(20), default='draft')  # draft, published
+    status = db.Column(db.String(20), default='draft')  # draft, pending_review, published, rejected
     category_id = db.Column(db.Integer, db.ForeignKey('blog_categories.id'))
     published_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    review_notes = db.Column(db.Text)  # Admin notes for rejected posts
     author_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     
     # Relationships
@@ -22,4 +23,11 @@ class BlogPost(db.Model):
     
     def publish(self):
         self.status = 'published'
-        self.published_at = datetime.utcnow() 
+        self.published_at = datetime.utcnow()
+        
+    def submit_for_review(self):
+        self.status = 'pending_review'
+        
+    def reject(self, notes=None):
+        self.status = 'rejected'
+        self.review_notes = notes 

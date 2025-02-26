@@ -1,0 +1,104 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="container py-4">
+    <h2>Database Health Check</h2>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="h5 mb-0">Status Overview</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        <strong>Status:</strong>
+                        {% if health_data.status == 'healthy' %}
+                            <span class="badge bg-success">Healthy</span>
+                        {% else %}
+                            <span class="badge bg-danger">Unhealthy</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Database Connected:</strong> 
+                        {% if health_data.database_connected %}
+                            <span class="text-success">Yes</span>
+                        {% else %}
+                            <span class="text-danger">No</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Models Count:</strong> {{ health_data.models_count }}</p>
+                    <p><strong>Database Tables Count:</strong> {{ health_data.database_tables_count }}</p>
+                    <p><strong>Schema Sync Status:</strong>
+                        {% if health_data.is_synced %}
+                            <span class="badge bg-success">Synced</span>
+                        {% else %}
+                            <span class="badge bg-warning">Out of Sync</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if health_data.missing_tables %}
+    <div class="card mb-4">
+        <div class="card-header bg-warning">
+            <h3 class="h5 mb-0">Missing Tables</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                {% for table in health_data.missing_tables %}
+                <li class="list-group-item">{{ table }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if health_data.extra_tables %}
+    <div class="card mb-4">
+        <div class="card-header bg-info">
+            <h3 class="h5 mb-0">Extra Tables</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                {% for table in health_data.extra_tables %}
+                <li class="list-group-item">{{ table }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="h5 mb-0">SQLAlchemy Models</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for model in health_data.models %}
+                        <li class="list-group-item">{{ model }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="h5 mb-0">Database Tables</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for table in health_data.tables %}
+                        <li class="list-group-item">{{ table }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

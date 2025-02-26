@@ -17,6 +17,7 @@ def index():
 
 @blog_bp.route('/blog/new', methods=['GET', 'POST'])
 @login_required
+@blogger_required
 def new():
     """Create new blog post (bloggers and admins only)"""
     if not (current_user.is_blogger() or current_user.is_admin):
@@ -24,20 +25,27 @@ def new():
         return redirect(url_for('blog.index'))
     
     if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        author_name = request.form.get('author_name')
+        
+        if not title or not content:
+            flash('Title and content are required.', 'error')
+            return render_template('blog/new.html')
+        
         post = BlogPost(
-            title=request.form['title'],
-            content=request.form['content'],
-            author_name=request.form['author_name'],
-            author=current_user,
-            status='published',
-            published_at=datetime.utcnow()
+            title=title,
+            content=content,
+            author_name=author_name,
+            author_id=current_user.id,
+            status='pending_review'
         )
         
         db.session.add(post)
         db.session.commit()
         
-        flash('Blog post created successfully!', 'success')
-        return redirect(url_for('blog.show', id=post.id))
+        flash('Blog post submitted for review. It will be published after approval.', 'success')
+        return redirect(url_for('blog.index'))
     
     return render_template('blog/new.html')
 
@@ -81,4 +89,44 @@ def category(slug):
     return render_template('blog/index.html', 
                          posts=posts, 
                          categories=categories, 
-                         current_category=category) 
+                         current_category=category)
+
+@blog_bp.route('/blog/preview/<int:id>')
+@login_required
+def preview(id):
+    post = BlogPost.query.get_or_404(id)
+    
+    # Only allow the author or admins to preview
+    if post.author_id != current_user.id and not current_user.is_admin:
+        flash('You do not have permission to view this post.', 'error')
+        return redirect(url_for('blog.index'))
+    
+    return render_template('blog/preview.html', post=post)
+
+@blog_bp.route('/blog/my-posts')
+@login_required
+@blogger_required
+def my_posts():
+    posts = BlogPost.query.filter_by(author_id=current_user.id).order_by(BlogPost.created_at.desc()).all()
+    return render_template('blog/my_posts.html', posts=posts)
+
+@blog_bp.route('/blog/<int:id>/resubmit', methods=['POST'])
+@login_required
+@blogger_required
+def resubmit(id):
+    post = BlogPost.query.get_or_404(id)
+    
+    if post.author_id != current_user.id:
+        flash('You do not have permission to resubmit this post.', 'error')
+        return redirect(url_for('blog.my_posts'))
+    
+    if post.status != 'rejected':
+        flash('Only rejected posts can be resubmitted.', 'error')
+        return redirect(url_for('blog.my_posts'))
+    
+    post.status = 'pending_review'
+    post.review_notes = None
+    db.session.commit()
+    
+    flash('Your post has been resubmitted for review.', 'success')
+    return redirect(url_for('blog.my_posts')) 

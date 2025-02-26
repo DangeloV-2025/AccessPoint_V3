@@ -4,6 +4,7 @@ from app.extensions import db, login_manager, init_supabase
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import click
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -36,6 +37,7 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     init_supabase()  # No need to pass app anymore
     login_manager.login_view = 'auth.login'
+    login_manager.login_message_category = 'info'
     
     # Register blueprints
     from app.routes.main import main_bp
@@ -51,7 +53,38 @@ def create_app(config_class=Config):
     app.register_blueprint(blog_bp)
     
     # Register CLI commands
-    from app.cli import register_commands
     register_commands(app)
     
+    # Register template context processors
+    from app.utils.helpers import get_pending_blog_count
+    
+    @app.context_processor
+    def utility_processor():
+        return {
+            'get_pending_blog_count': get_pending_blog_count
+        }
+    
     return app
+
+def register_commands(app):
+    """Register custom Flask CLI commands."""
+    
+    @app.cli.command("init-db")
+    def init_db():
+        """Initialize the database."""
+        db.create_all()
+        click.echo("Initialized the database.")
+    
+    @app.cli.command("migrate-blog")
+    def migrate_blog():
+        """Run blog migration to add review fields."""
+        from migrations.add_blog_review_fields import run_migration
+        run_migration()
+        click.echo("Blog migration completed.")
+    
+    @app.cli.command("create-admin")
+    def create_admin():
+        """Create admin users from config."""
+        from app.routes.admin import ensure_admin_users
+        ensure_admin_users()
+        click.echo("Admin users created.")
