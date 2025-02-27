@@ -41,4 +41,9 @@ def about():
 
 @main_bp.route('/contact')
 def contact():
-    return render_template('main/contact.html') 
+    return render_template('main/contact.html')
+
+@main_bp.route('/justin-is-awesome')
+def justin_plaque():
+    """Easter egg route for Justin's wall of fame"""
+    return render_template('justin_plaque.html') 

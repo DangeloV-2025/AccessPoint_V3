@@ -1,0 +1,640 @@
+{% extends "base.html" %}
+
+{% block title %}🚀 Justin's Innovation Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --justin-primary: var(--dark-blue);
+        --justin-secondary: var(--medium-blue);
+        --justin-accent: var(--accent-color);
+        --justin-light: var(--light-blue);
+    }
+
+    .justin-container {
+        background: linear-gradient(135deg, var(--justin-primary), var(--justin-secondary));
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        padding: 2rem 0;
+    }
+
+    .justin-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    .justin-title {
+        font-size: 3.5rem;
+        font-weight: bold;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        margin-bottom: 1rem;
+    }
+
+    .justin-subtitle {
+        font-size: 1.5rem;
+        opacity: 0.8;
+    }
+
+    .physics-container {
+        position: relative;
+        height: 80vh;
+        width: 95%;
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        backdrop-filter: blur(5px);
+        margin: 0 auto;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .justin-element {
+        position: absolute;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: transform 0.2s;
+        border: 3px solid white;
+    }
+
+    .justin-element:hover {
+        transform: scale(1.1);
+        z-index: 100;
+    }
+
+    .justin-element::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .justin-element:hover::after {
+        opacity: 1;
+    }
+
+    .achievement-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        z-index: 1000;
+        text-align: center;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        max-width: 400px;
+    }
+
+    .achievement-popup.show {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .achievement-popup h3 {
+        color: var(--justin-primary);
+        margin-bottom: 1rem;
+    }
+
+    .achievement-popup p {
+        margin-bottom: 1.5rem;
+    }
+
+    .achievement-popup button {
+        background: var(--justin-accent);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .achievement-popup button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .achievement-counter {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--justin-accent);
+        color: white;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        font-weight: bold;
+        z-index: 100;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .particle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .controls {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .control-btn {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.2s;
+        backdrop-filter: blur(5px);
+    }
+
+    .control-btn:hover {
+        background: rgba(255,255,255,0.3);
+    }
+
+    .justin-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255,255,255,0.9);
+        padding: 1rem;
+        transform: translateY(100%);
+        transition: transform 0.3s;
+        color: var(--justin-primary);
+    }
+
+    .justin-element:hover .justin-info {
+        transform: translateY(0);
+    }
+    
+    .speed-control {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        background: rgba(255,255,255,0.2);
+        padding: 1rem;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+    }
+    
+    .speed-label {
+        color: white;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .speed-slider {
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="justin-container">
+    <div class="container">
+        <div class="justin-header" data-aos="fade-down">
+            <h1 class="justin-title">Justin's Innovation Hub 🚀</h1>
+            <p class="justin-subtitle">Watch the innovation collision in action!</p>
+        </div>
+        
+        <div class="physics-container" id="physics-world">
+            <div class="achievement-counter" id="achievementCount">0</div>
+            <div class="speed-control">
+                <div class="speed-label">Speed</div>
+                <input type="range" min="1" max="10" value="5" class="speed-slider" id="speed-control">
+            </div>
+            <div class="controls">
+                <button class="control-btn" id="add-force">Boost Speed!</button>
+                <button class="control-btn" id="add-elements">Add More!</button>
+                <button class="control-btn" id="reset-sim">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="achievement-popup" id="achievement-popup">
+    <h3 id="popup-title">Achievement Unlocked!</h3>
+    <p id="popup-description">You've discovered something amazing!</p>
+    <button id="popup-close">Awesome!</button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Matter.js setup
+        const Engine = Matter.Engine,
+              Render = Matter.Render,
+              Runner = Matter.Runner,
+              Bodies = Matter.Bodies,
+              Body = Matter.Body,
+              Composite = Matter.Composite,
+              Composites = Matter.Composites,
+              Mouse = Matter.Mouse,
+              MouseConstraint = Matter.MouseConstraint;
+        
+        const container = document.getElementById('physics-world');
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        
+        // Create engine
+        const engine = Engine.create({
+            // Disable gravity - we'll handle movement ourselves
+            gravity: { x: 0, y: 0 }
+        });
+        
+        const world = engine.world;
+        
+        // Create renderer
+        const render = Render.create({
+            element: container,
+            engine: engine,
+            options: {
+                width: containerWidth,
+                height: containerHeight,
+                wireframes: false,
+                background: 'transparent'
+            }
+        });
+        
+        Render.run(render);
+        
+        // Create runner
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+        
+        // Justin data
+        const justinData = [
+            {
+                id: 'teaching',
+                image: '{{ url_for("static", filename="img/justin/IMG_7642.PNG") }}',
+                title: 'Master Educator',
+                description: 'Justin\'s innovative teaching methods have revolutionized how students learn complex concepts!'
+            },
+            {
+                id: 'leadership',
+                image: '{{ url_for("static", filename="img/justin/IMG_7641.PNG") }}',
+                title: 'Visionary Leader',
+                description: 'Leading with passion and purpose, Justin inspires everyone around him!'
+            },
+            {
+                id: 'tech',
+                image: '{{ url_for("static", filename="img/justin/IMG_7643.PNG") }}',
+                title: 'Tech Innovator',
+                description: 'Pushing the boundaries of technology to create new possibilities in education!'
+            },
+            {
+                id: 'mentor',
+                image: '{{ url_for("static", filename="img/justin/IMG_7644.PNG") }}',
+                title: 'Inspirational Mentor',
+                description: 'Justin\'s mentorship has launched countless careers and inspired a generation of innovators!'
+            },
+            {
+                id: 'style',
+                image: '{{ url_for("static", filename="img/justin/IMG_7645.PNG") }}',
+                title: 'Innovation Icon',
+                description: 'Setting trends and breaking barriers with a unique approach to education and technology!'
+            }
+        ];
+        
+        // Create Justin elements
+        const justinElements = [];
+        const elementSize = Math.min(containerWidth, containerHeight) * 0.15;
+        
+        function createJustinElement(data, index) {
+            // Create div for Justin element
+            const element = document.createElement('div');
+            element.className = 'justin-element';
+            element.style.width = `${elementSize}px`;
+            element.style.height = `${elementSize}px`;
+            element.style.backgroundImage = `url(${data.image})`;
+            element.dataset.id = data.id;
+            
+            // Add info div
+            const info = document.createElement('div');
+            info.className = 'justin-info';
+            info.innerHTML = `<strong>${data.title}</strong>`;
+            element.appendChild(info);
+            
+            container.appendChild(element);
+            
+            // Create physics body
+            const x = Math.random() * (containerWidth - elementSize);
+            const y = Math.random() * (containerHeight - elementSize);
+            
+            const body = Bodies.circle(
+                x + elementSize/2, 
+                y + elementSize/2, 
+                elementSize/2, 
+                {
+                    restitution: 0.9, // Higher restitution for bouncier collisions
+                    friction: 0.001,  // Lower friction
+                    frictionAir: 0.001, // Much lower air friction for faster movement
+                    render: {
+                        visible: false
+                    }
+                }
+            );
+            
+            // Store reference to DOM element
+            body.element = element;
+            body.elementData = data;
+            
+            // Add initial velocity
+            Body.setVelocity(body, { 
+                x: (Math.random() - 0.5) * 10, 
+                y: (Math.random() - 0.5) * 10 
+            });
+            
+            // Add to world
+            Composite.add(world, body);
+            justinElements.push(body);
+            
+            // Click event
+            element.addEventListener('click', function() {
+                showAchievement(data);
+            });
+            
+            return body;
+        }
+        
+        // Create initial elements
+        justinData.forEach((data, index) => {
+            createJustinElement(data, index);
+        });
+        
+        // Add walls
+        const wallOptions = {
+            isStatic: true,
+            restitution: 1.0, // Perfect bounce
+            render: {
+                visible: false
+            }
+        };
+        
+        Composite.add(world, [
+            // Bottom wall
+            Bodies.rectangle(containerWidth/2, containerHeight + 50, containerWidth + 100, 100, wallOptions),
+            // Left wall
+            Bodies.rectangle(-50, containerHeight/2, 100, containerHeight + 100, wallOptions),
+            // Right wall
+            Bodies.rectangle(containerWidth + 50, containerHeight/2, 100, containerHeight + 100, wallOptions),
+            // Top wall
+            Bodies.rectangle(containerWidth/2, -50, containerWidth + 100, 100, wallOptions)
+        ]);
+        
+        // Add mouse control
+        const mouse = Mouse.create(render.canvas);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: {
+                    visible: false
+                }
+            }
+        });
+        
+        Composite.add(world, mouseConstraint);
+        render.mouse = mouse;
+        
+        // Update DOM elements to match physics bodies
+        Matter.Events.on(engine, 'afterUpdate', function() {
+            justinElements.forEach(body => {
+                const { x, y, angle } = body.position;
+                const element = body.element;
+                
+                element.style.left = `${x - elementSize/2}px`;
+                element.style.top = `${y - elementSize/2}px`;
+                element.style.transform = `rotate(${angle}rad)`;
+                
+                // Ensure constant movement - if velocity is too low, boost it
+                const velocity = body.velocity;
+                const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+                
+                if (speed < 2) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const boost = 5 + Math.random() * 5;
+                    Body.setVelocity(body, {
+                        x: Math.cos(angle) * boost,
+                        y: Math.sin(angle) * boost
+                    });
+                }
+            });
+        });
+        
+        // Achievement counter and popup
+        let achievements = 0;
+        const achievementCount = document.getElementById('achievementCount');
+        const popup = document.getElementById('achievement-popup');
+        const popupTitle = document.getElementById('popup-title');
+        const popupDescription = document.getElementById('popup-description');
+        const popupClose = document.getElementById('popup-close');
+        
+        function showAchievement(data) {
+            achievements++;
+            achievementCount.textContent = achievements;
+            
+            // Show popup
+            popupTitle.textContent = `Achievement: ${data.title}`;
+            popupDescription.textContent = data.description;
+            popup.classList.add('show');
+            
+            // Create particles
+            createParticles(50);
+            
+            // Apply force to all elements for more chaos
+            justinElements.forEach(body => {
+                const angle = Math.random() * Math.PI * 2;
+                const force = 0.1 + Math.random() * 0.1;
+                Body.applyForce(body, body.position, {
+                    x: Math.cos(angle) * force,
+                    y: Math.sin(angle) * force
+                });
+            });
+        }
+        
+        popupClose.addEventListener('click', function() {
+            popup.classList.remove('show');
+        });
+        
+        // Create particles
+        function createParticles(count) {
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                
+                const x = Math.random() * containerWidth;
+                const y = Math.random() * containerHeight;
+                
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                
+                container.appendChild(particle);
+                
+                // Animate and remove
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 5 + Math.random() * 10; // Faster particles
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+                
+                let posX = x;
+                let posY = y;
+                
+                const animate = () => {
+                    posX += vx;
+                    posY += vy;
+                    
+                    particle.style.left = `${posX}px`;
+                    particle.style.top = `${posY}px`;
+                    
+                    if (posX < -10 || posX > containerWidth + 10 || 
+                        posY < -10 || posY > containerHeight + 10) {
+                        particle.remove();
+                    } else {
+                        requestAnimationFrame(animate);
+                    }
+                };
+                
+                requestAnimationFrame(animate);
+            }
+        }
+        
+        // Speed control
+        const speedControl = document.getElementById('speed-control');
+        speedControl.addEventListener('input', function() {
+            const speedFactor = parseFloat(this.value) / 5;
+            
+            justinElements.forEach(body => {
+                const velocity = body.velocity;
+                Body.setVelocity(body, {
+                    x: velocity.x * speedFactor,
+                    y: velocity.y * speedFactor
+                });
+            });
+        });
+        
+        // Controls
+        document.getElementById('add-force').addEventListener('click', function() {
+            justinElements.forEach(body => {
+                const angle = Math.random() * Math.PI * 2;
+                const force = 0.2 + Math.random() * 0.2; // Stronger force
+                Body.applyForce(body, body.position, {
+                    x: Math.cos(angle) * force,
+                    y: Math.sin(angle) * force
+                });
+            });
+            createParticles(20);
+        });
+        
+        document.getElementById('add-elements').addEventListener('click', function() {
+            // Add duplicates of existing elements for more chaos
+            const newElements = [];
+            justinData.forEach((data, index) => {
+                if (justinElements.length < 15) { // Limit to prevent too many elements
+                    newElements.push(createJustinElement(data, index));
+                }
+            });
+            
+            // Apply initial force to new elements
+            newElements.forEach(body => {
+                const angle = Math.random() * Math.PI * 2;
+                const force = 0.2 + Math.random() * 0.2;
+                Body.applyForce(body, body.position, {
+                    x: Math.cos(angle) * force,
+                    y: Math.sin(angle) * force
+                });
+            });
+            
+            createParticles(30);
+        });
+        
+        document.getElementById('reset-sim').addEventListener('click', function() {
+            // Remove all elements except the original 5
+            while (justinElements.length > 5) {
+                const body = justinElements.pop();
+                Composite.remove(world, body);
+                body.element.remove();
+            }
+            
+            // Reset positions and apply new velocities
+            justinElements.forEach((body, index) => {
+                const x = Math.random() * (containerWidth - elementSize);
+                const y = Math.random() * (containerHeight - elementSize);
+                
+                Body.setPosition(body, { x: x + elementSize/2, y: y + elementSize/2 });
+                
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 5 + Math.random() * 5;
+                Body.setVelocity(body, { 
+                    x: Math.cos(angle) * speed, 
+                    y: Math.sin(angle) * speed 
+                });
+            });
+            
+            createParticles(30);
+        });
+        
+        // Apply continuous forces to keep things moving
+        setInterval(() => {
+            justinElements.forEach(body => {
+                // Small random impulses to prevent elements from slowing down
+                if (Math.random() > 0.7) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const force = 0.05 + Math.random() * 0.05;
+                    Body.applyForce(body, body.position, {
+                        x: Math.cos(angle) * force,
+                        y: Math.sin(angle) * force
+                    });
+                }
+            });
+        }, 1000);
+        
+        // Initial force - stronger to start with high energy
+        setTimeout(() => {
+            justinElements.forEach(body => {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 10 + Math.random() * 10;
+                Body.setVelocity(body, { 
+                    x: Math.cos(angle) * speed, 
+                    y: Math.sin(angle) * speed 
+                });
+            });
+        }, 500);
+    });
+</script>
+{% endblock %} 
