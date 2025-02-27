@@ -4,14 +4,34 @@ from app.models import BlogPost, User, BlogCategory
 from app import db
 from datetime import datetime
 from app.utils.decorators import blogger_required
+from flask import current_app
+from bs4 import BeautifulSoup
+import html
 
 blog_bp = Blueprint('blog', __name__)
+
+def clean_html_content(content):
+    """Clean HTML content and return plain text"""
+    if not content:
+        return ""
+    # Decode HTML entities
+    content = html.unescape(content)
+    # Remove HTML tags
+    soup = BeautifulSoup(content, 'html.parser')
+    return soup.get_text(separator=' ').strip()
 
 @blog_bp.route('/blog')
 def index():
     """Show all published blog posts - accessible to all users"""
     posts = BlogPost.query.filter_by(status='published')\
         .order_by(BlogPost.published_at.desc()).all()
+    
+    # Clean the titles
+    for post in posts:
+        post.clean_title = clean_html_content(post.title)
+        # Create a clean excerpt for the content
+        post.clean_excerpt = clean_html_content(post.content)[:200] + "..."
+    
     categories = BlogCategory.query.all()
     return render_template('blog/index.html', posts=posts, categories=categories)
 
@@ -25,17 +45,22 @@ def new():
         content = request.form.get('content')
         author_name = request.form.get('author_name')
         
+        # Clean the title
+        title = clean_html_content(title)
+        
         if not title or not content:
             flash('Title and content are required.', 'error')
             return render_template('blog/new.html')
         
         try:
+            # Sanitize content if needed
+            # content = bleach.clean(content, tags=allowed_tags, attributes=allowed_attrs)
+            
             post = BlogPost(
                 title=title,
                 content=content,
                 author_name=author_name,
                 author_id=current_user.id,
-                # If admin, publish directly, otherwise set as pending
                 status='published' if current_user.is_admin else 'pending'
             )
             
@@ -54,6 +79,7 @@ def new():
             
         except Exception as e:
             db.session.rollback()
+            current_app.logger.error(f"Error creating blog post: {str(e)}")
             flash('An error occurred while creating your post. Please try again.', 'error')
             return render_template('blog/new.html')
     

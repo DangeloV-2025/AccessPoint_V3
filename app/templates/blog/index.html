@@ -96,13 +96,8 @@
                                     </span>
                                 </a>
                                 {% endif %}
-                                <h2 class="h5 card-title">
-                                    <a href="{{ url_for('blog.show', id=post.id) }}" 
-                                       class="text-decoration-none text-dark">
-                                        {{ post.title }}
-                                    </a>
-                                </h2>
-                                <p class="card-text text-muted">{{ post.content[:150] }}...</p>
+                                <h2 class="card-title">{{ post.clean_title }}</h2>
+                                <p class="card-text">{{ post.clean_excerpt }}</p>
                                 <div class="blog-meta d-flex justify-content-between align-items-center">
                                     <span>
                                         <i class="fas fa-user-circle"></i>

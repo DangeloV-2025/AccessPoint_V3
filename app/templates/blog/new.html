@@ -19,7 +19,7 @@
                     <h2 class="card-title mb-0">Create New Blog Post</h2>
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form method="POST" id="blogForm">
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
                             <input type="text" class="form-control" id="title" name="title" required>
@@ -38,12 +38,18 @@
 
                         <div class="mb-3">
                             <label for="content" class="form-label">Content</label>
-                            <textarea id="content" name="content" required></textarea>
+                            <textarea id="content" name="content"></textarea>
                         </div>
 
                         <div class="text-end">
                             <a href="{{ url_for('blog.index') }}" class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Publish Post</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                {% if current_user.is_admin %}
+                                    Publish Post
+                                {% else %}
+                                    Submit for Review
+                                {% endif %}
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -61,14 +67,29 @@
         selector: '#content',
         plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
         toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-        font_family_formats: 'Arial=arial,helvetica,sans-serif; Courier New=courier new,courier,monospace; AkrutiKndPadmini=Akpdmi-n',
-        font_size_formats: '8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
         height: 500,
         menubar: true,
         branding: false,
-        automatic_uploads: true,
-        images_upload_url: '/upload-image',  // You'll need to implement this endpoint
-        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }'
+        setup: function(editor) {
+            editor.on('change', function() {
+                editor.save(); // This saves content back to the textarea
+            });
+        }
+    });
+
+    // Form submission handling
+    document.getElementById('blogForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get the TinyMCE content
+        const content = tinymce.get('content').getContent();
+        if (!content) {
+            alert('Please enter some content for your blog post');
+            return;
+        }
+
+        // If we have content, submit the form
+        this.submit();
     });
 </script>
 {% endblock %}
