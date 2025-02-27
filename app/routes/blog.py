@@ -20,10 +20,6 @@ def index():
 @blogger_required
 def new():
     """Create new blog post (bloggers and admins only)"""
-    if not (current_user.is_blogger() or current_user.is_admin):
-        flash('You do not have permission to create blog posts.', 'error')
-        return redirect(url_for('blog.index'))
-    
     if request.method == 'POST':
         title = request.form.get('title')
         content = request.form.get('content')
@@ -33,19 +29,33 @@ def new():
             flash('Title and content are required.', 'error')
             return render_template('blog/new.html')
         
-        post = BlogPost(
-            title=title,
-            content=content,
-            author_name=author_name,
-            author_id=current_user.id,
-            status='pending_review'
-        )
-        
-        db.session.add(post)
-        db.session.commit()
-        
-        flash('Blog post submitted for review. It will be published after approval.', 'success')
-        return redirect(url_for('blog.index'))
+        try:
+            post = BlogPost(
+                title=title,
+                content=content,
+                author_name=author_name,
+                author_id=current_user.id,
+                # If admin, publish directly, otherwise set as pending
+                status='published' if current_user.is_admin else 'pending'
+            )
+            
+            if current_user.is_admin:
+                post.published_at = datetime.utcnow()
+            
+            db.session.add(post)
+            db.session.commit()
+            
+            if current_user.is_admin:
+                flash('Your blog post has been published!', 'success')
+            else:
+                flash('Your blog post has been submitted for review!', 'success')
+                
+            return redirect(url_for('blog.my_posts'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash('An error occurred while creating your post. Please try again.', 'error')
+            return render_template('blog/new.html')
     
     return render_template('blog/new.html')
 
@@ -129,4 +139,27 @@ def resubmit(id):
     db.session.commit()
     
     flash('Your post has been resubmitted for review.', 'success')
-    return redirect(url_for('blog.my_posts')) 
+    return redirect(url_for('blog.my_posts'))
+
+@blog_bp.route("/post/create", methods=["POST"])
+@login_required
+def create_post():
+    # ... existing validation code ...
+    
+    try:
+        new_post = BlogPost(
+            title=title,
+            content=content,
+            author_id=current_user.id,
+            status='pending'  # Set initial status as pending
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        
+        flash('Your blog post has been submitted for review!', 'success')
+        return redirect(url_for('blog.my_posts'))
+        
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred while creating your post. Please try again.', 'error')
+        return redirect(url_for('blog.create')) 

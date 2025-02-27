@@ -19,4 +19,10 @@ def admin_required(f):
     return role_required('admin')(f)
 
 def blogger_required(f):
-    return role_required('blogger')(f) 
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not (current_user.is_blogger() or current_user.is_admin):
+            flash('You do not have permission to create blog posts.', 'error')
+            return redirect(url_for('blog.index'))
+        return f(*args, **kwargs)
+    return decorated_function 

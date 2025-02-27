@@ -8,6 +8,7 @@ from io import StringIO
 from datetime import datetime
 import os
 from supabase import create_client, Client
+from app.utils.decorators import admin_required
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -427,28 +428,21 @@ def delete_blog_post(id):
 
 @admin_bp.route('/admin/blog-queue')
 @login_required
-def blog_approval_queue():
-    if not current_user.is_admin:
-        flash('Unauthorized access.', 'error')
-        return redirect(url_for('main.index'))
-    
-    pending_posts = BlogPost.query.filter_by(status='pending_review').order_by(BlogPost.created_at.desc()).all()
+@admin_required
+def blog_queue():
+    pending_posts = BlogPost.query.filter_by(status='pending').order_by(BlogPost.created_at.desc()).all()
     return render_template('admin/blog_queue.html', posts=pending_posts)
 
 @admin_bp.route('/admin/blog/<int:id>/approve', methods=['POST'])
 @login_required
+@admin_required
 def approve_blog(id):
-    if not current_user.is_admin:
-        flash('Unauthorized access.', 'error')
-        return redirect(url_for('main.index'))
-    
     post = BlogPost.query.get_or_404(id)
-    post.status = 'published'
-    post.published_at = datetime.utcnow()
+    post.publish()  # This sets status to published and sets published_at
     db.session.commit()
     
-    flash(f'Blog post "{post.title}" has been approved and published.', 'success')
-    return redirect(url_for('admin.blog_approval_queue'))
+    flash(f'Blog post "{post.title}" has been published.', 'success')
+    return redirect(url_for('admin.blog_queue'))
 
 @admin_bp.route('/admin/blog/<int:id>/reject', methods=['POST'])
 @login_required
@@ -465,7 +459,7 @@ def reject_blog(id):
     db.session.commit()
     
     flash(f'Blog post "{post.title}" has been rejected.', 'success')
-    return redirect(url_for('admin.blog_approval_queue'))
+    return redirect(url_for('admin.blog_queue'))
 
 @admin_bp.route('/admin/blog-management')
 @login_required
@@ -524,3 +518,28 @@ def check_db_health():
             'error': str(e)
         }
         return render_template('admin/db_health.html', health_data=health_data), 500
+
+@admin_bp.route("/blog/review/<int:post_id>/<action>", methods=["POST"])
+@login_required
+@admin_required
+def review_blog_post(post_id, action):
+    post = BlogPost.query.get_or_404(post_id)
+    
+    if action not in ['approve', 'reject']:
+        flash('Invalid action', 'error')
+        return redirect(url_for('admin.blog_queue'))
+    
+    try:
+        post.status = 'published' if action == 'approve' else 'rejected'
+        post.reviewed_by = current_user.id
+        post.reviewed_at = datetime.utcnow()
+        post.review_notes = request.form.get('notes', '')
+        
+        db.session.commit()
+        
+        flash(f'Blog post has been {action}ed', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred during review', 'error')
+    
+    return redirect(url_for('admin.blog_queue'))

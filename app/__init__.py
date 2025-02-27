@@ -88,3 +88,10 @@ def register_commands(app):
         from app.routes.admin import ensure_admin_users
         ensure_admin_users()
         click.echo("Admin users created.")
+        
+    @app.cli.command("process-blog-queue")
+    def process_blog_queue():
+        """Process pending blog posts in the queue."""
+        from app.routes.admin import process_pending_posts
+        count = process_pending_posts()
+        click.echo(f"Processed {count} pending blog posts.")
