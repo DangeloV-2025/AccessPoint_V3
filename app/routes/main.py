@@ -2,8 +2,20 @@ from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from app.models import Application, BlogPost
 from datetime import datetime
+from bs4 import BeautifulSoup
+import html
 
 main_bp = Blueprint('main', __name__)
+
+def clean_html_content(content):
+    """Clean HTML content and return plain text"""
+    if not content:
+        return ""
+    # Decode HTML entities
+    content = html.unescape(content)
+    # Remove HTML tags
+    soup = BeautifulSoup(content, 'html.parser')
+    return soup.get_text(separator=' ').strip()
 
 @main_bp.route('/')
 def index():
@@ -11,6 +23,12 @@ def index():
         .order_by(BlogPost.published_at.desc())\
         .limit(2)\
         .all()
+    
+    # Clean the titles and content for each post
+    for post in recent_posts:
+        post.clean_title = clean_html_content(post.title)
+        post.clean_excerpt = clean_html_content(post.content)[:150] + "..."
+    
     return render_template('main/index.html', recent_posts=recent_posts)
 
 @main_bp.route('/dashboard')

@@ -26,7 +26,7 @@ def index():
     posts = BlogPost.query.filter_by(status='published')\
         .order_by(BlogPost.published_at.desc()).all()
     
-    # Clean the titles
+    # Clean the titles and content for each post
     for post in posts:
         post.clean_title = clean_html_content(post.title)
         # Create a clean excerpt for the content

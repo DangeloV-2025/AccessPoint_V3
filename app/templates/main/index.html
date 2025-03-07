@@ -73,16 +73,11 @@
                                 {{ post.category.name if post.category else 'Uncategorized' }}
                             </span>
                         </div>
-                        <h3 class="h5 mb-3">
-                            <a href="{{ url_for('blog.show', id=post.id) }}" class="text-decoration-none text-dark">
-                                {{ post.title }}
-                            </a>
-                        </h3>
-                        <p class="text-muted">{{ post.content[:150] }}...</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">{{ post.published_at.strftime('%B %d, %Y') }}</small>
-                            <a href="{{ url_for('blog.show', id=post.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
-                        </div>
+                        <h5 class="card-title">{{ post.clean_title }}</h5>
+                        <p class="card-text">{{ post.clean_excerpt }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{{ url_for('blog.show', id=post.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
                     </div>
                 </div>
             </div>

@@ -5,6 +5,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 import click
+from flask_migrate import Migrate
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -34,6 +35,8 @@ def create_app(config_class=Config):
     
     # Initialize extensions
     db.init_app(app)
+    migrate = Migrate()
+    migrate.init_app(app, db)
     login_manager.init_app(app)
     init_supabase()  # No need to pass app anymore
     login_manager.login_view = 'auth.login'
@@ -45,12 +48,14 @@ def create_app(config_class=Config):
     from app.routes.admin import admin_bp
     from app.routes.resources import resources_bp
     from app.routes.blog import blog_bp
+    from app.routes.portfolio import portfolio_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(resources_bp)
     app.register_blueprint(blog_bp)
+    app.register_blueprint(portfolio_bp)
     
     # Register CLI commands
     register_commands(app)

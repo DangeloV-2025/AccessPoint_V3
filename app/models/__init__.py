@@ -7,6 +7,7 @@ from .todo import Todo
 from .blog_post import BlogPost
 from .blog_category import BlogCategory
 from .user import Role, roles_users
+from app.models.portfolio import Portfolio, CollegeApplication, Essay
 
 # This allows us to import all models from app.models
 __all__ = [

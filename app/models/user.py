@@ -68,6 +68,9 @@ class User(UserMixin, db.Model):
     # Relationships
     applications = db.relationship('Application', back_populates='user', cascade='all, delete-orphan')
     blog_posts = db.relationship('BlogPost', back_populates='author', lazy='dynamic')
+    college_applications = db.relationship('CollegeApplication', back_populates='user', cascade='all, delete-orphan')
+    essays = db.relationship('Essay', back_populates='user', cascade='all, delete-orphan')
+    portfolio = db.relationship('Portfolio', back_populates='user', uselist=False, cascade='all, delete-orphan')
 
     roles = db.relationship(
         'Role',

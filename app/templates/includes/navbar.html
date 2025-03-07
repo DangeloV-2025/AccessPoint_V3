@@ -18,6 +18,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.dashboard') }}">My Dashboard</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('portfolio.my_portfolio') }}">Portfolio</a>
+                    </li>
+                    
                     {% if current_user.is_admin %}
                         <li class="admin-button-box">
                             <a class="nav-link" href="{{ url_for('admin.admin_dashboard') }}">Admin Dashboard</a>
