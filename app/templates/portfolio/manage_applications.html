@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Application{% endblock %}
+
+{% block extra_css %}
+<style>
+    .portfolio-header {
+        background: linear-gradient(135deg, var(--dark-blue), var(--medium-blue));
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Application Header -->
+<div class="portfolio-header text-white">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-0">Manage Application</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    {% set app = application if application is defined else None %}
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="college_name" class="form-label">College Name</label>
+                            <input type="text" class="form-control" id="college_name" name="college_name"
+                                   value="{{ app.college_name if app else '' }}"
+                                   placeholder="e.g., MIT, Stanford, etc.">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Application Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="" disabled {% if not app or not app.status %}selected{% endif %}>Select status</option>
+                                <option value="pending" {% if app and app.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="accepted" {% if app and app.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                                <option value="rejected" {% if app and app.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                <option value="waitlisted" {% if app and app.status == 'waitlisted' %}selected{% endif %}>Waitlisted</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="scholarships_awarded" class="form-label">Scholarships Awarded (if any)</label>
+                            <input type="text" class="form-control" id="scholarships_awarded" name="scholarships_awarded"
+                                   value="{{ app.scholarships_awarded if app else '' }}"
+                                   placeholder="e.g., Presidential Scholarship">
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="honors_program" name="honors_program"
+                                       {% if app and app.honors_program %}checked{% endif %}>
+                                <label class="form-check-label" for="honors_program">
+                                    I was accepted into the honors program
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('portfolio.my_portfolio') }}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

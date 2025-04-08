@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Essays{% endblock %}
+
+{% block extra_css %}
+<style>
+    .portfolio-header {
+        background: linear-gradient(135deg, var(--dark-blue), var(--medium-blue));
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Portfolio Header -->
+<div class="portfolio-header text-white">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-0">Manage Essays</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    {% set e = essay if essay is defined else None %}
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Essay Title</label>
+                            <input type="text" class="form-control" id="title" name="title"
+                                   value="{{ e.title if e else '' }}"
+                                   placeholder="e.g., Why I Chose Engineering">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Essay Content</label>
+                            <textarea class="form-control" id="content" name="content" rows="8"
+                                      placeholder="Paste or write your essay here...">{{ e.content if e else '' }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="college_application_id" class="form-label">Linked College Application (optional)</label>
+                            <select class="form-select" id="college_application_id" name="college_application_id">
+                                <option value="" selected>Not linked to any college</option>
+                                {% if applications %}
+                                    {% for app in applications %}
+                                        <option value="{{ app.id }}"
+                                            {% if e and e.college_application_id == app.id %}selected{% endif %}>
+                                            {{ app.college_name }}
+                                        </option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_public" name="is_public"
+                                       {% if e and e.is_public %}checked{% endif %}>
+                                <label class="form-check-label" for="is_public">
+                                    Make this essay public
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('portfolio.my_portfolio') }}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
