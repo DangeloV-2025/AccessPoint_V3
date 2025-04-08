@@ -88,14 +88,15 @@
                             </div>
                             {% endif %}
                             <div class="card-body">
-                                {% if post.category %}
-                                <a href="{{ url_for('blog.category', slug=post.category.slug) }}" 
-                                   class="text-decoration-none">
-                                    <span class="category-badge mb-2 d-inline-block">
-                                        {{ post.category.name }}
-                                    </span>
+                            <!-- This means all posts have a category listed -->
+                            {% if post.category %}
+                                <a href="{{ url_for('blog.category', slug=post.category.slug) }}" class="text-decoration-none">
+                                    <span class="category-badge mb-2 d-inline-block">{{ post.category.name }}</span>
                                 </a>
-                                {% endif %}
+                            {% else %}
+                                <span class="category-badge mb-2 d-inline-block">Uncategorized</span>
+                            {% endif %}
+
                                 <h2 class="card-title">{{ post.clean_title }}</h2>
                                 <p class="card-text">{{ post.clean_excerpt }}</p>
                                 <div class="blog-meta d-flex justify-content-between align-items-center">
@@ -110,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-white border-0">
-                                <a href="{{ url_for('blog.show', id=post.id) }}" 
+                                <a href="{{ url_for('blog.show', id=post.id) }}"
                                    class="btn btn-outline-primary btn-sm">
                                     Read More
                                 </a>
@@ -138,13 +139,13 @@
                     </div>
                     <div class="card-body">
                         <div class="list-group list-group-flush">
-                            <a href="{{ url_for('blog.index') }}" 
-                               class="list-group-item list-group-item-action border-0 
+                            <a href="{{ url_for('blog.index') }}"
+                               class="list-group-item list-group-item-action border-0
                                       {% if not current_category %}active{% endif %}">
                                 All Posts
                             </a>
                             {% for category in categories %}
-                            <a href="{{ url_for('blog.category', slug=category.slug) }}" 
+                            <a href="{{ url_for('blog.category', slug=category.slug) }}"
                                class="list-group-item list-group-item-action border-0
                                       {% if current_category and current_category.id == category.id %}active{% endif %}">
                                 {{ category.name }}
@@ -165,4 +166,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
