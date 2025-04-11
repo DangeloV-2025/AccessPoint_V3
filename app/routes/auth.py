@@ -212,38 +212,55 @@ def reset_password_request():
             supabase.auth.reset_password_for_email(
                 email,
                 {
-                    "redirect_to": url_for('auth.reset_password', _external=True)
+                    # Make sure this matches the route below
+                    "redirect_to": "https://www.accesspointfoundation.org/auth/set-new-password"
                 }
             )
             flash('Check your email for password reset instructions.', 'success')
             return redirect(url_for('auth.login'))
             
         except Exception as e:
-            app.logger.error(f"Password reset error: {str(e)}")
+            current_app.logger.error(f"Password reset error: {str(e)}")
             flash('An error occurred. Please try again.', 'error')
     
     return render_template('auth/reset_password_request.html')
 
-@auth_bp.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    """Handle password reset"""
+@auth_bp.route('/auth/set-new-password', methods=['GET', 'POST'])
+def set_new_password():
+    """Handle setting new password after reset"""
+    # Get the token from the URL
+    token = request.args.get('token')
+    
+    if not token:
+        flash('Invalid password reset link.', 'error')
+        return redirect(url_for('auth.login'))
+    
     if request.method == 'POST':
-        new_password = request.form.get('password')
-        if not new_password:
-            flash('Please enter a new password.', 'error')
-            return redirect(url_for('auth.reset_password'))
-        
         try:
-            # Update password via Supabase
-            response = supabase.auth.update_user({
-                "password": new_password
-            })
+            new_password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
             
-            flash('Your password has been reset successfully.', 'success')
+            if not new_password or not confirm_password:
+                flash('Please enter and confirm your new password.', 'error')
+                return redirect(url_for('auth.set_new_password', token=token))
+            
+            if new_password != confirm_password:
+                flash('Passwords do not match.', 'error')
+                return redirect(url_for('auth.set_new_password', token=token))
+            
+            # Update the user's password using the token
+            supabase.auth.update_user(
+                {"password": new_password},
+                token
+            )
+            
+            flash('Your password has been updated successfully. Please log in.', 'success')
             return redirect(url_for('auth.login'))
             
         except Exception as e:
-            app.logger.error(f"Password update error: {str(e)}")
-            flash('An error occurred. Please try again.', 'error')
+            current_app.logger.error(f"Password update error: {str(e)}")
+            flash('An error occurred while updating your password.', 'error')
+            return redirect(url_for('auth.set_new_password', token=token))
     
-    return render_template('auth/reset_password.html') 
+    # Show the set new password form
+    return render_template('auth/set_new_password.html') 
