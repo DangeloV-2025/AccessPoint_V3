@@ -39,7 +39,7 @@ if __name__ == '__main__':
     """
     Usage:
         python manage.py <email> <role_name>
-    
+
     Example:
         python manage.py testuser@example.com admin
     """
