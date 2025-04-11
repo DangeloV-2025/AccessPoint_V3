@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.user import User
 from app import db
 from supabase import create_client, Client
 import logging
 from app.extensions import supabase  # We'll add this to extensions.py
+from datetime import datetime, timedelta
+import secrets
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -185,65 +187,111 @@ def logout():
 
 @auth_bp.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        try:
-            # Send password reset email through Supabase
-            result = supabase.auth.reset_password_email(email)
-            flash('Password reset link has been sent to your email.', 'success')
-            return redirect(url_for('auth.login'))
-        except Exception as e:
-            current_app.logger.error(f"Password reset error: {str(e)}")
-            flash('Error sending reset link. Please try again.', 'error')
-    
-    return render_template('auth/forgot_password.html')
-
-@auth_bp.route('/reset-password', methods=['GET', 'POST'])
-def reset_password_request():
-    """Handle password reset request"""
+    """Handle forgot password request"""
     if request.method == 'POST':
         email = request.form.get('email')
         if not email:
             flash('Please enter your email address.', 'error')
-            return redirect(url_for('auth.reset_password_request'))
+            return redirect(url_for('auth.forgot_password'))
         
         try:
-            # Send password reset email via Supabase
+            # Generate OTP
+            otp = secrets.randbelow(900000) + 100000  # 6-digit number
+            session['reset_email'] = email
+            session['reset_otp'] = str(otp)  # Convert to string for consistent comparison
+            session['reset_expiry'] = (datetime.utcnow() + timedelta(hours=1)).timestamp()
+            
+            # Log the OTP for debugging
+            current_app.logger.info(f"Generated OTP for {email}: {otp}")
+            
+            # Send OTP via Supabase SMTP
             supabase.auth.reset_password_for_email(
                 email,
                 {
-                    "redirect_to": url_for('auth.reset_password', _external=True)
+                    "token": str(otp),
+                    "type": "signup",
+                    "redirect_to": url_for('auth.verify_reset', _external=True)
                 }
             )
-            flash('Check your email for password reset instructions.', 'success')
-            return redirect(url_for('auth.login'))
+            
+            flash('Check your email for the password reset code.', 'success')
+            return redirect(url_for('auth.verify_reset'))
             
         except Exception as e:
-            app.logger.error(f"Password reset error: {str(e)}")
+            current_app.logger.error(f"Password reset error: {str(e)}")
             flash('An error occurred. Please try again.', 'error')
     
-    return render_template('auth/reset_password_request.html')
+    return render_template('auth/forgot_password.html')
 
-@auth_bp.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    """Handle password reset"""
+@auth_bp.route('/verify-reset', methods=['GET', 'POST'])
+def verify_reset():
+    """Verify OTP and allow password reset"""
+    # Log session data for debugging
+    current_app.logger.info(f"Session data: reset_email={session.get('reset_email')}, "
+                          f"reset_otp={session.get('reset_otp')}, "
+                          f"reset_expiry={session.get('reset_expiry')}")
+    
+    if 'reset_email' not in session:
+        flash('Please request a password reset first.', 'error')
+        return redirect(url_for('auth.forgot_password'))
+    
     if request.method == 'POST':
-        new_password = request.form.get('password')
-        if not new_password:
-            flash('Please enter a new password.', 'error')
-            return redirect(url_for('auth.reset_password'))
+        otp = request.form.get('otp')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # Log received OTP for debugging
+        current_app.logger.info(f"Received OTP: {otp}")
+        current_app.logger.info(f"Stored OTP: {session.get('reset_otp')}")
+        
+        # Validate inputs
+        if not all([otp, new_password, confirm_password]):
+            flash('All fields are required.', 'error')
+            return redirect(url_for('auth.verify_reset'))
+        
+        if new_password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return redirect(url_for('auth.verify_reset'))
+        
+        # Check OTP
+        stored_otp = session.get('reset_otp')
+        expiry = session.get('reset_expiry')
+        
+        if not stored_otp or not expiry:
+            flash('Reset session expired. Please try again.', 'error')
+            return redirect(url_for('auth.forgot_password'))
+        
+        if datetime.utcnow().timestamp() > expiry:
+            flash('Reset code expired. Please request a new one.', 'error')
+            return redirect(url_for('auth.forgot_password'))
+        
+        # Convert both OTPs to strings and strip whitespace for comparison
+        if str(otp).strip() != str(stored_otp).strip():
+            current_app.logger.error(f"OTP mismatch. Received: '{otp}', Stored: '{stored_otp}'")
+            flash('Invalid reset code.', 'error')
+            return redirect(url_for('auth.verify_reset'))
         
         try:
-            # Update password via Supabase
-            response = supabase.auth.update_user({
+            # Update password in Supabase
+            email = session['reset_email']
+            supabase.auth.update_user({
+                "email": email,
                 "password": new_password
             })
             
-            flash('Your password has been reset successfully.', 'success')
+            # Log successful password reset
+            current_app.logger.info(f"Password reset successful for {email}")
+            
+            # Clear session data
+            session.pop('reset_email', None)
+            session.pop('reset_otp', None)
+            session.pop('reset_expiry', None)
+            
+            flash('Your password has been updated successfully.', 'success')
             return redirect(url_for('auth.login'))
             
         except Exception as e:
-            app.logger.error(f"Password update error: {str(e)}")
-            flash('An error occurred. Please try again.', 'error')
+            current_app.logger.error(f"Password update error: {str(e)}")
+            flash('An error occurred while updating your password.', 'error')
     
-    return render_template('auth/reset_password.html') 
+    return render_template('auth/verify_reset.html') 

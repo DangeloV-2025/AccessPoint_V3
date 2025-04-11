@@ -1,0 +1,43 @@
+<div class="mb-3">
+    <label for="otp" class="form-label">Reset Code</label>
+    <input type="text" 
+           class="form-control" 
+           id="otp" 
+           name="otp" 
+           required 
+           autofocus
+           maxlength="6"
+           pattern="\d{6}"
+           placeholder="Enter 6-digit code"
+           oninput="this.value = this.value.replace(/[^\d]/g, '').substring(0, 6)">
+    <div class="form-text">
+        Enter the 6-digit code sent to your email.
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('resetForm').addEventListener('submit', function(e) {
+    const password = document.getElementById('new_password').value;
+    const confirm = document.getElementById('confirm_password').value;
+    
+    if (password !== confirm) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+        return;
+    }
+    
+    const otp = document.getElementById('otp').value;
+    if (!/^\d{6}$/.test(otp)) {
+        e.preventDefault();
+        alert('Please enter a valid 6-digit code.');
+        return;
+    }
+});
+
+// Clean OTP input
+document.getElementById('otp').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^\d]/g, '').substring(0, 6);
+});
+</script>
+{% endblock %} 
