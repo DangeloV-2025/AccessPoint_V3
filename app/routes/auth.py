@@ -199,31 +199,51 @@ def forgot_password():
     return render_template('auth/forgot_password.html')
 
 @auth_bp.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    # This route handles the actual password reset after clicking email link
+def reset_password_request():
+    """Handle password reset request"""
     if request.method == 'POST':
+        email = request.form.get('email')
+        if not email:
+            flash('Please enter your email address.', 'error')
+            return redirect(url_for('auth.reset_password_request'))
+        
         try:
-            new_password = request.form.get('new_password')
-            confirm_password = request.form.get('confirm_password')
-            
-            if new_password != confirm_password:
-                flash('Passwords do not match.', 'error')
-                return redirect(url_for('auth.reset_password'))
-            
-            # Get access token from URL (sent by Supabase)
-            access_token = request.args.get('access_token')
-            
-            # Update password in Supabase
-            supabase.auth.update_user(
-                {"password": new_password},
-                access_token
+            # Send password reset email via Supabase
+            supabase.auth.reset_password_for_email(
+                email,
+                {
+                    "redirect_to": url_for('auth.reset_password', _external=True)
+                }
             )
-            
-            flash('Password has been reset successfully!', 'success')
+            flash('Check your email for password reset instructions.', 'success')
             return redirect(url_for('auth.login'))
             
         except Exception as e:
-            current_app.logger.error(f"Password reset error: {str(e)}")
-            flash('Error resetting password. Please try again.', 'error')
+            app.logger.error(f"Password reset error: {str(e)}")
+            flash('An error occurred. Please try again.', 'error')
+    
+    return render_template('auth/reset_password_request.html')
+
+@auth_bp.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    """Handle password reset"""
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        if not new_password:
+            flash('Please enter a new password.', 'error')
+            return redirect(url_for('auth.reset_password'))
+        
+        try:
+            # Update password via Supabase
+            response = supabase.auth.update_user({
+                "password": new_password
+            })
+            
+            flash('Your password has been reset successfully.', 'success')
+            return redirect(url_for('auth.login'))
+            
+        except Exception as e:
+            app.logger.error(f"Password update error: {str(e)}")
+            flash('An error occurred. Please try again.', 'error')
     
     return render_template('auth/reset_password.html') 

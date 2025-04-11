@@ -55,3 +55,6 @@
 2025-03-06 20:40:31,843 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:27]
 2025-03-06 20:41:10,342 INFO: User Vincent.dangelo@gilmour.org logged in successfully [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:41]
 2025-03-06 20:41:10,345 ERROR: Login error for user Vincent.dangelo@gilmour.org: name 'url_parse' is not defined [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:50]
+2025-04-10 22:26:33,598 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:27]
+2025-04-10 22:26:34,246 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:27]
+2025-04-10 22:39:13,946 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:27]
