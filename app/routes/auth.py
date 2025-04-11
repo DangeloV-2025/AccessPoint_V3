@@ -201,7 +201,7 @@ def reset_password_request():
             return redirect(url_for('auth.reset_password_request'))
         
         try:
-            # Use the reset password method
+            # Send reset password email
             supabase.auth.reset_password_for_email(
                 email,
                 {
@@ -257,6 +257,14 @@ def verify_otp():
 @auth_bp.route('/auth/set-new-password', methods=['GET', 'POST'])
 def set_new_password():
     """Handle setting new password after reset"""
+    # Get the access token from the URL
+    access_token = request.args.get('access_token')
+    refresh_token = request.args.get('refresh_token')
+    
+    if not access_token:
+        flash('Invalid or expired password reset link.', 'error')
+        return redirect(url_for('auth.login'))
+    
     if request.method == 'POST':
         try:
             new_password = request.form.get('password')
@@ -264,11 +272,14 @@ def set_new_password():
             
             if not new_password or not confirm_password:
                 flash('Please enter and confirm your new password.', 'error')
-                return redirect(url_for('auth.set_new_password'))
+                return redirect(url_for('auth.set_new_password', access_token=access_token))
             
             if new_password != confirm_password:
                 flash('Passwords do not match.', 'error')
-                return redirect(url_for('auth.set_new_password'))
+                return redirect(url_for('auth.set_new_password', access_token=access_token))
+            
+            # Set the session with the access token
+            supabase.auth.set_session(access_token, refresh_token)
             
             # Update the user's password
             supabase.auth.update_user({
@@ -281,6 +292,7 @@ def set_new_password():
         except Exception as e:
             current_app.logger.error(f"Password update error: {str(e)}")
             flash('An error occurred while updating your password.', 'error')
-            return redirect(url_for('auth.set_new_password'))
+            return redirect(url_for('auth.set_new_password', access_token=access_token))
     
-    return render_template('auth/set_new_password.html') 
+    # Pass the access token to the template so it can be included in the form
+    return render_template('auth/set_new_password.html', access_token=access_token) 
