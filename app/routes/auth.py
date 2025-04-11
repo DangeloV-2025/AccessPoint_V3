@@ -181,118 +181,50 @@ def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
         try:
-            # Send password reset email through Supabase
-            result = supabase.auth.reset_password_email(email)
-            flash('Password reset link has been sent to your email.', 'success')
-            return redirect(url_for('auth.login'))
+            # Send OTP via email
+            result = supabase.auth.reset_password_for_email(email)
+            flash('A verification code has been sent to your email.', 'success')
+            # Pass email to next step
+            return redirect(url_for('auth.reset_password', email=email))
         except Exception as e:
             current_app.logger.error(f"Password reset error: {str(e)}")
-            flash('Error sending reset link. Please try again.', 'error')
+            flash('Error sending verification code. Please try again.', 'error')
     
     return render_template('auth/forgot_password.html')
 
 @auth_bp.route('/reset-password', methods=['GET', 'POST'])
-def reset_password_request():
-    """Handle password reset request"""
-    if request.method == 'POST':
-        email = request.form.get('email')
-        if not email:
-            flash('Please enter your email address.', 'error')
-            return redirect(url_for('auth.reset_password_request'))
-        
-        try:
-            # Send reset password email
-            supabase.auth.reset_password_for_email(
-                email,
-                {
-                    "redirect_to": url_for('auth.set_new_password', _external=True)
-                }
-            )
-            
-            flash('Check your email for password reset instructions.', 'success')
-            return redirect(url_for('auth.login'))
-            
-        except Exception as e:
-            current_app.logger.error(f"Password reset error: {str(e)}")
-            flash('An error occurred. Please try again.', 'error')
+def reset_password():
+    """Handle OTP verification and password reset in one step"""
+    email = request.args.get('email')
     
-    return render_template('auth/reset_password_request.html')
-
-@auth_bp.route('/verify-otp', methods=['GET', 'POST'])
-def verify_otp():
-    """Handle OTP verification and password reset"""
     if request.method == 'POST':
         try:
+            email = request.form.get('email')
             otp = request.form.get('otp')
             new_password = request.form.get('new_password')
             confirm_password = request.form.get('confirm_password')
             
-            if not all([otp, new_password, confirm_password]):
+            if not all([email, otp, new_password, confirm_password]):
                 flash('Please fill in all fields.', 'error')
-                return redirect(url_for('auth.verify_otp'))
+                return redirect(url_for('auth.reset_password', email=email))
             
             if new_password != confirm_password:
                 flash('Passwords do not match.', 'error')
-                return redirect(url_for('auth.verify_otp'))
+                return redirect(url_for('auth.reset_password', email=email))
             
-            # Verify OTP and update password
+            # Verify OTP and reset password in one step
             result = supabase.auth.verify_otp({
-                "email": request.form.get('email'),
+                "email": email,
                 "token": otp,
-                "type": "recovery"
-            })
-            
-            if result:
-                # Update password
-                supabase.auth.update_user({"password": new_password})
-                flash('Your password has been updated successfully. Please log in.', 'success')
-                return redirect(url_for('auth.login'))
-            
-        except Exception as e:
-            current_app.logger.error(f"OTP verification error: {str(e)}")
-            flash('Invalid code or expired link. Please try again.', 'error')
-    
-    return render_template('auth/verify_otp.html')
-
-@auth_bp.route('/auth/set-new-password', methods=['GET', 'POST'])
-def set_new_password():
-    """Handle setting new password after reset"""
-    # Get the access token from the URL
-    access_token = request.args.get('access_token')
-    refresh_token = request.args.get('refresh_token')
-    
-    if not access_token:
-        flash('Invalid or expired password reset link.', 'error')
-        return redirect(url_for('auth.login'))
-    
-    if request.method == 'POST':
-        try:
-            new_password = request.form.get('password')
-            confirm_password = request.form.get('confirm_password')
-            
-            if not new_password or not confirm_password:
-                flash('Please enter and confirm your new password.', 'error')
-                return redirect(url_for('auth.set_new_password', access_token=access_token))
-            
-            if new_password != confirm_password:
-                flash('Passwords do not match.', 'error')
-                return redirect(url_for('auth.set_new_password', access_token=access_token))
-            
-            # Set the session with the access token
-            supabase.auth.set_session(access_token, refresh_token)
-            
-            # Update the user's password
-            supabase.auth.update_user({
-                "password": new_password
+                "type": "recovery",
+                "new_password": new_password
             })
             
             flash('Your password has been updated successfully. Please log in.', 'success')
             return redirect(url_for('auth.login'))
             
         except Exception as e:
-            current_app.logger.error(f"Password update error: {str(e)}")
-            flash('An error occurred while updating your password.', 'error')
-            return redirect(url_for('auth.set_new_password', access_token=access_token))
+            current_app.logger.error(f"Password reset error: {str(e)}")
+            flash('Invalid code or expired link. Please try again.', 'error')
     
-    # Pass the access token to the template so it can be included in the form
-    return render_template('auth/set_new_password.html', access_token=access_token) 
+    return render_template('auth/reset_password.html', email=email) 
