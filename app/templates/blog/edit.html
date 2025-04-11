@@ -1,16 +1,5 @@
-<!-- app/templates/blog/edit.html -->
 {% extends "base.html" %}
-{% block title %}
-    Edit Blog Post
-{% endblock %}
-
-{% block extra_css %}
-<style>
-    .tox-tinymce {
-        min-height: 500px;
-    }
-</style>
-{% endblock %}
+{% block title %}Edit Blog Post{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -21,51 +10,10 @@
                     <h2 class="card-title mb-0">Edit Blog Post</h2>
                 </div>
                 <div class="card-body">
-                    <form method="POST">
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
-                        </div>
-
-                        <!-- Added by Seth for category edits-->
-                        <div class="mb-3">
-                            <label for="Category" class="form-label">Category</label>
-                            <input type="text" class="form-control" id="category" name="category" value="{{ post.category.name }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="content" class="form-label">Content</label>
-                            <textarea id="content" name="content" required>{{ post.content }}</textarea>
-                        </div>
-
-                        <div class="text-end">
-                            <a href="{{ url_for('blog.show', id=post.id) }}" class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Update Post</button>
-                        </div>
-                    </form>
+                    {% include "blog/_form.html" with context %}
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<!-- TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/{{ config.TINYMCE_API_KEY }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    tinymce.init({
-        selector: '#content',
-        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-        font_family_formats: 'Arial=arial,helvetica,sans-serif; Courier New=courier new,courier,monospace; AkrutiKndPadmini=Akpdmi-n',
-        font_size_formats: '8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
-        height: 500,
-        menubar: true,
-        branding: false,
-        automatic_uploads: true,
-        images_upload_url: '/upload-image',
-        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }'
-    });
-</script>
 {% endblock %}

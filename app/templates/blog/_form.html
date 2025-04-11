@@ -1,0 +1,39 @@
+<form method="POST" id="blogForm" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" name="title"
+               value="{{ post.title if post else '' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="author_name" class="form-label">Author Name</label>
+        <input type="text" class="form-control" id="author_name" name="author_name"
+               value="{{ post.author_name if post else current_user.email.split('@')[0]|title }}" required>
+        <small class="text-muted">This name will be displayed as the author of the post</small>
+    </div>
+
+    <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <input type="text" class="form-control" id="category" name="category.name"
+               value="{{ post.category.name if post and post.category else '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea id="content" name="content">{{ post.content if post else '' }}</textarea>
+    </div>
+
+    <!-- Image Upload Field with Allowed File Types -->
+    <div class="mb-3">
+        <label for="image" class="form-label">Blog Image</label>
+        <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png, image/jpg">
+        <small class="text-muted">Optional: Upload an image for your blog post. Only .jpg, .jpeg, and .png files are allowed.</small>
+    </div>
+
+    <div class="text-end">
+        <a href="{{ cancel_url }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+            {{ submit_label }}
+        </button>
+    </div>
+</form>
