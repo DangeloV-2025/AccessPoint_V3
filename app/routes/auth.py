@@ -201,10 +201,16 @@ def reset_password_request():
             return redirect(url_for('auth.reset_password_request'))
         
         try:
-            # Use the correct Supabase method for OTP-based password reset
-            supabase.auth.reset_password_email(email)
-            flash('Check your email for the password reset code.', 'success')
-            return redirect(url_for('auth.verify_otp'))
+            # Use the reset password method
+            supabase.auth.reset_password_for_email(
+                email,
+                {
+                    "redirect_to": url_for('auth.set_new_password', _external=True)
+                }
+            )
+            
+            flash('Check your email for password reset instructions.', 'success')
+            return redirect(url_for('auth.login'))
             
         except Exception as e:
             current_app.logger.error(f"Password reset error: {str(e)}")
@@ -251,12 +257,6 @@ def verify_otp():
 @auth_bp.route('/auth/set-new-password', methods=['GET', 'POST'])
 def set_new_password():
     """Handle setting new password after reset"""
-    token = request.args.get('token')
-    
-    if not token:
-        flash('Invalid password reset link.', 'error')
-        return redirect(url_for('auth.login'))
-    
     if request.method == 'POST':
         try:
             new_password = request.form.get('password')
@@ -264,18 +264,16 @@ def set_new_password():
             
             if not new_password or not confirm_password:
                 flash('Please enter and confirm your new password.', 'error')
-                return redirect(url_for('auth.set_new_password', token=token))
+                return redirect(url_for('auth.set_new_password'))
             
             if new_password != confirm_password:
                 flash('Passwords do not match.', 'error')
-                return redirect(url_for('auth.set_new_password', token=token))
+                return redirect(url_for('auth.set_new_password'))
             
-            with current_app.app_context():  # Add app context
-                # Update the user's password using the token
-                supabase.auth.update_user(
-                    {"password": new_password},
-                    token
-                )
+            # Update the user's password
+            supabase.auth.update_user({
+                "password": new_password
+            })
             
             flash('Your password has been updated successfully. Please log in.', 'success')
             return redirect(url_for('auth.login'))
@@ -283,6 +281,6 @@ def set_new_password():
         except Exception as e:
             current_app.logger.error(f"Password update error: {str(e)}")
             flash('An error occurred while updating your password.', 'error')
-            return redirect(url_for('auth.set_new_password', token=token))
+            return redirect(url_for('auth.set_new_password'))
     
     return render_template('auth/set_new_password.html') 
