@@ -201,22 +201,52 @@ def reset_password_request():
             return redirect(url_for('auth.reset_password_request'))
         
         try:
-            with current_app.app_context():  # Add app context
-                # Send password reset email via Supabase
-                supabase.auth.reset_password_for_email(
-                    email,
-                    {
-                        "redirect_to": "https://www.accesspointfoundation.org/auth/set-new-password"
-                    }
-                )
-            flash('Check your email for password reset instructions.', 'success')
-            return redirect(url_for('auth.login'))
+            # Use the correct Supabase method for OTP-based password reset
+            supabase.auth.reset_password_email(email)
+            flash('Check your email for the password reset code.', 'success')
+            return redirect(url_for('auth.verify_otp'))
             
         except Exception as e:
             current_app.logger.error(f"Password reset error: {str(e)}")
             flash('An error occurred. Please try again.', 'error')
     
     return render_template('auth/reset_password_request.html')
+
+@auth_bp.route('/verify-otp', methods=['GET', 'POST'])
+def verify_otp():
+    """Handle OTP verification and password reset"""
+    if request.method == 'POST':
+        try:
+            otp = request.form.get('otp')
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
+            
+            if not all([otp, new_password, confirm_password]):
+                flash('Please fill in all fields.', 'error')
+                return redirect(url_for('auth.verify_otp'))
+            
+            if new_password != confirm_password:
+                flash('Passwords do not match.', 'error')
+                return redirect(url_for('auth.verify_otp'))
+            
+            # Verify OTP and update password
+            result = supabase.auth.verify_otp({
+                "email": request.form.get('email'),
+                "token": otp,
+                "type": "recovery"
+            })
+            
+            if result:
+                # Update password
+                supabase.auth.update_user({"password": new_password})
+                flash('Your password has been updated successfully. Please log in.', 'success')
+                return redirect(url_for('auth.login'))
+            
+        except Exception as e:
+            current_app.logger.error(f"OTP verification error: {str(e)}")
+            flash('Invalid code or expired link. Please try again.', 'error')
+    
+    return render_template('auth/verify_otp.html')
 
 @auth_bp.route('/auth/set-new-password', methods=['GET', 'POST'])
 def set_new_password():
