@@ -1,6 +1,7 @@
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from supabase import create_client
+from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
 import logging
@@ -13,18 +14,16 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 supabase = None
 
-def init_supabase():
-    """Initialize Supabase client"""
-    try:
-        supabase_url = current_app.config['SUPABASE_URL']
-        supabase_key = current_app.config['SUPABASE_ANON_KEY']
+def init_supabase(app: Flask) -> None:
+    """Initialize Supabase client with app context"""
+    global supabase
+    
+    supabase_url = app.config.get('SUPABASE_URL')
+    supabase_key = app.config.get('SUPABASE_ANON_KEY')
+    
+    if not supabase_url or not supabase_key:
+        raise ValueError("Supabase URL and key must be configured")
         
-        if not supabase_url or not supabase_key:
-            raise ValueError("Supabase URL and key must be configured")
-            
-        return create_client(supabase_url, supabase_key)
-    except Exception as e:
-        current_app.logger.error(f"Supabase initialization error: {str(e)}")
-        raise
+    supabase = create_client(supabase_url, supabase_key)
 
     return supabase 

@@ -38,7 +38,10 @@ def create_app(config_class=Config):
     migrate = Migrate()
     migrate.init_app(app, db)
     login_manager.init_app(app)
-    init_supabase()  # No need to pass app anymore
+    
+    with app.app_context():
+        init_supabase(app)  # Initialize Supabase within app context
+    
     login_manager.login_view = 'auth.login'
     login_manager.login_message_category = 'info'
     

@@ -8,12 +8,6 @@ from app.extensions import supabase  # We'll add this to extensions.py
 
 auth_bp = Blueprint('auth', __name__)
 
-def get_supabase() -> Client:
-    return create_client(
-        current_app.config['SUPABASE_URL'],
-        current_app.config['SUPABASE_ANON_KEY']
-    )
-
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -168,7 +162,6 @@ def logout():
         
         # Then, log out from Supabase
         try:
-            supabase = get_supabase()
             supabase.auth.sign_out()
         except Exception as e:
             current_app.logger.warning(f"Supabase logout failed for user {user_email}: {str(e)}")
@@ -208,14 +201,14 @@ def reset_password_request():
             return redirect(url_for('auth.reset_password_request'))
         
         try:
-            # Send password reset email via Supabase
-            supabase.auth.reset_password_for_email(
-                email,
-                {
-                    # Make sure this matches the route below
-                    "redirect_to": "https://www.accesspointfoundation.org/auth/set-new-password"
-                }
-            )
+            with current_app.app_context():  # Add app context
+                # Send password reset email via Supabase
+                supabase.auth.reset_password_for_email(
+                    email,
+                    {
+                        "redirect_to": "https://www.accesspointfoundation.org/auth/set-new-password"
+                    }
+                )
             flash('Check your email for password reset instructions.', 'success')
             return redirect(url_for('auth.login'))
             
@@ -228,7 +221,6 @@ def reset_password_request():
 @auth_bp.route('/auth/set-new-password', methods=['GET', 'POST'])
 def set_new_password():
     """Handle setting new password after reset"""
-    # Get the token from the URL
     token = request.args.get('token')
     
     if not token:
@@ -248,11 +240,12 @@ def set_new_password():
                 flash('Passwords do not match.', 'error')
                 return redirect(url_for('auth.set_new_password', token=token))
             
-            # Update the user's password using the token
-            supabase.auth.update_user(
-                {"password": new_password},
-                token
-            )
+            with current_app.app_context():  # Add app context
+                # Update the user's password using the token
+                supabase.auth.update_user(
+                    {"password": new_password},
+                    token
+                )
             
             flash('Your password has been updated successfully. Please log in.', 'success')
             return redirect(url_for('auth.login'))
@@ -262,5 +255,4 @@ def set_new_password():
             flash('An error occurred while updating your password.', 'error')
             return redirect(url_for('auth.set_new_password', token=token))
     
-    # Show the set new password form
     return render_template('auth/set_new_password.html') 
