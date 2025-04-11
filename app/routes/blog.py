@@ -56,7 +56,6 @@ def category(slug):
                          posts=posts,
                          categories=categories,
                          current_category=category)
-
 @blog_bp.route('/blog/new', methods=['GET', 'POST'])
 @login_required
 @blogger_required
@@ -72,12 +71,14 @@ def new():
 
         if not title or not content:
             flash('Title and content are required.', 'error')
-            return render_template('blog/new.html')
+            return render_template(
+                'blog/new.html',
+                post=None,
+                cancel_url=url_for('blog.index'),
+                submit_label="Publish Post" if current_user.is_admin else "Submit for Review"
+            )
 
         try:
-            # Sanitize content if needed
-            # content = bleach.clean(content, tags=allowed_tags, attributes=allowed_attrs)
-
             post = BlogPost(
                 title=title,
                 content=content,
@@ -92,20 +93,31 @@ def new():
             db.session.add(post)
             db.session.commit()
 
-            if current_user.is_admin:
-                flash('Your blog post has been published!', 'success')
-            else:
-                flash('Your blog post has been submitted for review!', 'success')
-
+            flash(
+                'Your blog post has been published!' if current_user.is_admin
+                else 'Your blog post has been submitted for review!',
+                'success'
+            )
             return redirect(url_for('blog.my_posts'))
 
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error creating blog post: {str(e)}")
             flash('An error occurred while creating your post. Please try again.', 'error')
-            return render_template('blog/new.html')
+            return render_template(
+                'blog/new.html',
+                post=None,
+                cancel_url=url_for('blog.index'),
+                submit_label="Publish Post" if current_user.is_admin else "Submit for Review"
+            )
 
-    return render_template('blog/new.html')
+    return render_template(
+        'blog/new.html',
+        post=None,
+        cancel_url=url_for('blog.index'),
+        submit_label="Publish Post" if current_user.is_admin else "Submit for Review"
+    )
+
 
 @blog_bp.route('/blog/<int:id>')
 def show(id):
@@ -122,18 +134,30 @@ def show(id):
 def edit(id):
     """Edit a blog post (author and admins only)"""
     post = BlogPost.query.get_or_404(id)
+
+    # Permissions check
     if not (current_user.is_admin or current_user == post.author):
         flash('You do not have permission to edit this post.', 'error')
         return redirect(url_for('blog.show', id=id))
 
     if request.method == 'POST':
-        post.title = request.form['title']
-        post.content = request.form['content']
+        post.title = request.form.get('title')
+        post.content = request.form.get('content')
+        post.author_name = request.form.get('author_name')
+
+        # You could clean/sanitize again here if needed
+        # post.title = clean_html_content(post.title)
+
         db.session.commit()
         flash('Blog post updated successfully!', 'success')
         return redirect(url_for('blog.show', id=post.id))
 
-    return render_template('blog/edit.html', post=post)
+    return render_template(
+        'blog/edit.html',
+        post=post,
+        cancel_url=url_for('blog.show', id=post.id),
+        submit_label="Update Post"
+    )
 
 
 
