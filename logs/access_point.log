@@ -14,3 +14,8 @@
 2025-04-11 20:22:46,032 INFO: Received Supabase token for verification: 933888 [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:228]
 2025-04-11 20:22:46,591 INFO: Supabase token verified successfully [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:246]
 2025-04-11 20:23:00,698 INFO: User babywho308@gmail.com logged in successfully [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:43]
+2025-04-11 20:27:27,657 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:27]
+2025-04-11 20:27:28,095 INFO: Access Point startup [in /Users/d_angel/Access_Point_V3/app/__init__.py:27]
+2025-04-11 20:27:36,155 WARNING: Supabase logout failed for user babywho308@gmail.com: 'SUPABASE_ANON_KEY' [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:176]
+2025-04-11 20:27:36,157 INFO: User babywho308@gmail.com logged out successfully [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:179]
+2025-04-11 20:27:46,207 INFO: User babywho308@gmail.com logged in successfully [in /Users/d_angel/Access_Point_V3/app/routes/auth.py:43]
