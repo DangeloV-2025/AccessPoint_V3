@@ -1,19 +1,64 @@
-<div class="mb-3">
-    <label for="otp" class="form-label">Reset Code</label>
-    <input type="text" 
-           class="form-control" 
-           id="otp" 
-           name="otp" 
-           required 
-           autofocus
-           maxlength="6"
-           pattern="\d{6}"
-           placeholder="Enter 6-digit code"
-           oninput="this.value = this.value.replace(/[^\d]/g, '').substring(0, 6)">
-    <div class="form-text">
-        Enter the 6-digit code sent to your email.
+{% extends "base.html" %}
+
+{% block title %}Reset Password{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4">Reset Your Password</h2>
+                    
+                    <form method="POST" id="resetForm">
+                        <div class="mb-3">
+                            <label for="otp" class="form-label">Reset Code</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="otp" 
+                                   name="otp" 
+                                   value="{{ request.args.get('token', '') }}"
+                                   required>
+                            <div class="form-text">
+                                Enter the code sent to your email.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="new_password" 
+                                   name="new_password" 
+                                   required
+                                   minlength="8">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="confirm_password" 
+                                   name="confirm_password" 
+                                   required
+                                   minlength="8">
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                Reset Password
+                            </button>
+                            <a href="{{ url_for('auth.forgot_password') }}" class="btn btn-outline-secondary">
+                                Request New Code
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
 
 {% block extra_js %}
 <script>
@@ -27,17 +72,11 @@ document.getElementById('resetForm').addEventListener('submit', function(e) {
         return;
     }
     
-    const otp = document.getElementById('otp').value;
-    if (!/^\d{6}$/.test(otp)) {
+    if (password.length < 8) {
         e.preventDefault();
-        alert('Please enter a valid 6-digit code.');
+        alert('Password must be at least 8 characters long.');
         return;
     }
-});
-
-// Clean OTP input
-document.getElementById('otp').addEventListener('input', function(e) {
-    this.value = this.value.replace(/[^\d]/g, '').substring(0, 6);
 });
 </script>
 {% endblock %} 

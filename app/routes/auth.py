@@ -195,25 +195,18 @@ def forgot_password():
             return redirect(url_for('auth.forgot_password'))
         
         try:
-            # Generate OTP
-            otp = secrets.randbelow(900000) + 100000  # 6-digit number
-            session['reset_email'] = email
-            session['reset_otp'] = str(otp)  # Convert to string for consistent comparison
-            session['reset_expiry'] = (datetime.utcnow() + timedelta(hours=1)).timestamp()
-            
-            # Log the OTP for debugging
-            current_app.logger.info(f"Generated OTP for {email}: {otp}")
-            
-            # Send OTP via Supabase SMTP
+            # Send password reset email via Supabase - they will generate the token
             supabase.auth.reset_password_for_email(
                 email,
                 {
-                    "token": str(otp),
-                    "type": "signup",
                     "redirect_to": url_for('auth.verify_reset', _external=True)
                 }
             )
             
+            # Only store email in session
+            session['reset_email'] = email
+            
+            current_app.logger.info(f"Password reset requested for {email}")
             flash('Check your email for the password reset code.', 'success')
             return redirect(url_for('auth.verify_reset'))
             
@@ -225,27 +218,16 @@ def forgot_password():
 
 @auth_bp.route('/verify-reset', methods=['GET', 'POST'])
 def verify_reset():
-    """Verify OTP and allow password reset"""
-    # Log session data for debugging
-    current_app.logger.info(f"Session data: reset_email={session.get('reset_email')}, "
-                          f"reset_otp={session.get('reset_otp')}, "
-                          f"reset_expiry={session.get('reset_expiry')}")
-    
-    if 'reset_email' not in session:
-        flash('Please request a password reset first.', 'error')
-        return redirect(url_for('auth.forgot_password'))
-    
+    """Verify token and allow password reset"""
     if request.method == 'POST':
-        otp = request.form.get('otp')
+        token = request.form.get('otp')
         new_password = request.form.get('new_password')
         confirm_password = request.form.get('confirm_password')
+        email = session.get('reset_email')  # Get email from session
         
-        # Log received OTP for debugging
-        current_app.logger.info(f"Received OTP: {otp}")
-        current_app.logger.info(f"Stored OTP: {session.get('reset_otp')}")
+        current_app.logger.info(f"Received Supabase token for verification: {token}")
         
-        # Validate inputs
-        if not all([otp, new_password, confirm_password]):
+        if not all([token, new_password, confirm_password, email]):
             flash('All fields are required.', 'error')
             return redirect(url_for('auth.verify_reset'))
         
@@ -253,45 +235,29 @@ def verify_reset():
             flash('Passwords do not match.', 'error')
             return redirect(url_for('auth.verify_reset'))
         
-        # Check OTP
-        stored_otp = session.get('reset_otp')
-        expiry = session.get('reset_expiry')
-        
-        if not stored_otp or not expiry:
-            flash('Reset session expired. Please try again.', 'error')
-            return redirect(url_for('auth.forgot_password'))
-        
-        if datetime.utcnow().timestamp() > expiry:
-            flash('Reset code expired. Please request a new one.', 'error')
-            return redirect(url_for('auth.forgot_password'))
-        
-        # Convert both OTPs to strings and strip whitespace for comparison
-        if str(otp).strip() != str(stored_otp).strip():
-            current_app.logger.error(f"OTP mismatch. Received: '{otp}', Stored: '{stored_otp}'")
-            flash('Invalid reset code.', 'error')
-            return redirect(url_for('auth.verify_reset'))
-        
         try:
-            # Update password in Supabase
-            email = session['reset_email']
-            supabase.auth.update_user({
+            # Verify the OTP with both email and token
+            response = supabase.auth.verify_otp({
                 "email": email,
+                "token": token,
+                "type": "recovery"
+            })
+            
+            current_app.logger.info("Supabase token verified successfully")
+            
+            # Update the password
+            supabase.auth.update_user({
                 "password": new_password
             })
             
-            # Log successful password reset
-            current_app.logger.info(f"Password reset successful for {email}")
-            
-            # Clear session data
+            # Clear session
             session.pop('reset_email', None)
-            session.pop('reset_otp', None)
-            session.pop('reset_expiry', None)
             
             flash('Your password has been updated successfully.', 'success')
             return redirect(url_for('auth.login'))
             
         except Exception as e:
-            current_app.logger.error(f"Password update error: {str(e)}")
-            flash('An error occurred while updating your password.', 'error')
+            current_app.logger.error(f"Password reset verification error: {str(e)}")
+            flash('Invalid or expired reset code. Please try again.', 'error')
     
     return render_template('auth/verify_reset.html') 
