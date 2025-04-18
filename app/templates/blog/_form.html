@@ -25,9 +25,13 @@
 
     <!-- Image Upload Field with Allowed File Types -->
     <div class="mb-3">
-        <label for="image" class="form-label">Blog Image</label>
-        <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png, image/jpg">
-        <small class="text-muted">Optional: Upload an image for your blog post. Only .jpg, .jpeg, and .png files are allowed.</small>
+        <label for="image" class="form-label">Featured Image (optional)</label>
+        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+        {% if post and post.image_url %}
+        <div class="mt-2">
+            <img src="{{ post.image_url }}" alt="Current featured image" class="img-thumbnail" style="max-height: 200px;">
+        </div>
+        {% endif %}
     </div>
 
     <div class="text-end">

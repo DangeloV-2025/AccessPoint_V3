@@ -1,0 +1,13 @@
+<div class="card h-100">
+    {% if post.image_url %}
+        <img src="{{ post.image_url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+    {% else %}
+        <!-- Your default book icon/image -->
+        <div class="card-img-top text-center py-4 bg-light">
+            <i class="fas fa-book fa-4x text-secondary"></i>
+        </div>
+    {% endif %}
+    <div class="card-body">
+        <!-- ... rest of the card content ... -->
+    </div>
+</div> 

@@ -8,6 +8,7 @@ from .blog_post import BlogPost
 from .blog_category import BlogCategory
 from .user import Role, roles_users
 from app.models.portfolio import Portfolio, CollegeApplication, Essay
+from .comment import Comment
 
 # This allows us to import all models from app.models
 __all__ = [
@@ -21,5 +22,6 @@ __all__ = [
     'BlogCategory',
     'resource_tags',
     'Role',
-    'roles_users'
+    'roles_users',
+    'Comment'
 ] 

@@ -6,6 +6,7 @@ from logging.handlers import RotatingFileHandler
 import os
 import click
 from flask_migrate import Migrate
+from app.utils.filters import format_datetime
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -68,6 +69,9 @@ def create_app(config_class=Config):
         return {
             'get_pending_blog_count': get_pending_blog_count
         }
+    
+    # Register the datetime filter
+    app.jinja_env.filters['datetime'] = format_datetime
     
     return app
 
