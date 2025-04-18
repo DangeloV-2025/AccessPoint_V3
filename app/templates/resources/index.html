@@ -112,14 +112,14 @@
                     <div class="mb-3">
                         <label class="form-label">Resource Type</label>
                         <div class="d-flex flex-column gap-2">
-                            <button type="button" 
+                            <button type="button"
                                     class="btn btn-outline-primary w-100 active"
                                     onclick="filterByType('all')"
                                     data-type="all">
                                 All Resources
                             </button>
                             {% for type, config in config.RESOURCE_TYPES.items() %}
-                            <button type="button" 
+                            <button type="button"
                                     class="btn btn-outline-primary w-100"
                                     onclick="filterByType('{{ type }}')"
                                     data-type="{{ type }}">
@@ -135,9 +135,9 @@
                         <div class="tags-container">
                             {% for tag in tags %}
                             <div class="form-check">
-                                <input class="form-check-input tag-checkbox" 
-                                       type="checkbox" 
-                                       value="{{ tag.name }}" 
+                                <input class="form-check-input tag-checkbox"
+                                       type="checkbox"
+                                       value="{{ tag.name }}"
                                        id="tag-{{ tag.id }}">
                                 <label class="form-check-label" for="tag-{{ tag.id }}">
                                     {{ tag.name }}
@@ -164,7 +164,7 @@
         <div class="col-lg-9">
             <div class="row g-4" id="resourcesList">
                 {% for resource in resources %}
-                <div class="col-md-6 resource-item" 
+                <div class="col-md-6 resource-item"
                      data-type="{{ resource.resource_type }}"
                      data-name="{{ resource.name.lower() }}"
                      data-deadline="{{ resource.deadline.strftime('%Y-%m-%d') if resource.deadline else '' }}">
@@ -179,13 +179,13 @@
                                 <div class="deadline-badge deadline-soon">{{ days_until }} Days Left</div>
                             {% endif %}
                         {% endif %}
-                        
+
                         <div class="card-body">
                             <span class="resource-type-badge mb-2 d-inline-block">
                                 {{ config.RESOURCE_TYPES[resource.resource_type].display_name if resource.resource_type in config.RESOURCE_TYPES else resource.resource_type|title }}
                             </span>
                             <h3 class="h5 card-title">
-                                <a href="{{ url_for('resources.show', id=resource.id) }}" 
+                                <a href="{{ url_for('resources.show', id=resource.id) }}"
                                    class="text-decoration-none text-dark">
                                     {{ resource.name }}
                                 </a>
@@ -197,7 +197,8 @@
                                     No description available
                                 {% endif %}
                             </p>
-                            
+
+
                             {% if resource.deadline %}
                             <p class="card-text">
                                 <small class="text-muted">
@@ -208,7 +209,7 @@
                             {% endif %}
                         </div>
                         <div class="card-footer bg-white border-0">
-                            <a href="{{ url_for('resources.show', id=resource.id) }}" 
+                            <a href="{{ url_for('resources.show', id=resource.id) }}"
                                class="btn btn-outline-primary btn-sm">
                                 View Details
                             </a>
@@ -240,7 +241,7 @@ function filterResources() {
 
         // Check search term
         if (searchTerm && !(
-            name.includes(searchTerm) || 
+            name.includes(searchTerm) ||
             description.includes(searchTerm)
         )) {
             show = false;
@@ -251,7 +252,7 @@ function filterResources() {
             if (type !== selectedType) {
                 show = false;
             }
-         
+
         }
 
         // Check tags
@@ -265,10 +266,10 @@ function filterResources() {
                 show = false;
             }
         }
-        
+
         const resizeEvent = new Event('resize')
         window.dispatchEvent(resizeEvent)
-        
+
         item.style.display = show ? '' : 'none';
     });
 }
@@ -293,4 +294,4 @@ document.getElementById('upcomingOnly').addEventListener('change', filterResourc
 // Initial filter
 filterResources();
 </script>
-{% endblock %} 
+{% endblock %}
